@@ -1,0 +1,138 @@
+// Use kh2-bar.bt
+
+struct dataTransfer {
+    ubyte raw[0x90];
+};
+
+struct gsInfo {
+    ubyte raw[0xa0];
+};
+
+struct texAnimUvsc {
+    uint index;
+    float uSpeed;
+    float vSpeed;
+};
+
+struct texAnimFrameEntry {
+    short frameControl : 4 <fgcolor=0xc0c000>;
+    short loopOffset : 12;
+    ushort minLen;
+    ushort maxLen;
+    ushort spriteIndex;
+};
+
+struct texAnimTexa (int64 top) {
+    ushort unk1;
+    ushort texIndex;
+    ushort frameStride;
+    ushort bitsPerPixel;
+    ushort minSlotIdx;
+    ushort maxSlotIdx;
+    ushort numAnims;
+    ushort numSprites;
+    ushort uOff;
+    ushort vOff;
+    ushort rrw;
+    ushort rrh;
+    uint slotTableOffset;
+    uint animTableOffset;
+    uint spriteImageOffset;
+    uint defAnimIdx;
+
+    local int64 cursor = FTell();
+
+    FSeek(top +spriteImageOffset);
+    ubyte startSpriteImage <fgcolor=0x0000c0, comment="startSpriteImage">;
+
+    FSeek(top +slotTableOffset);
+    ushort slotTableOffsets[1+maxSlotIdx-minSlotIdx];
+
+    FSeek(top +animTableOffset);
+    uint animTableOffsets[numAnims];
+
+    local int i, x;
+    for (i=0; i<numAnims; i++) {
+        FSeek(top +animTableOffsets[i]);
+        for (x=0; true; x++) {
+            texAnimFrameEntry frameEntry;
+            if (frameEntry.frameControl >= 2) {
+                break;
+            }
+        }
+    }
+
+    FSeek(cursor);
+};
+
+struct texAnimEnd {
+    char tag[4];
+};
+
+struct texAnimChunk {
+    char key[4];
+
+    if (Strcmp(key, "_KN5") == 0) {
+        return;
+    }
+
+    uint len;
+
+    local int64 top = FTell();
+
+    if (Strcmp(key, "UVSC") == 0) {
+        texAnimUvsc uvsc;
+    }
+    else if (Strcmp(key, "TEXA") == 0) {
+        texAnimTexa texa(top);
+    }
+    FSeek(top +len);
+};
+
+struct modelTextureFileHeader (int64 top) {
+    uint magic;
+    uint colorsCount;
+    uint textureTransferCount;
+    uint gsInfoCount;
+    uint offsetDataOffset;
+    uint dataTransferOffset;
+    uint gsInfoOffset;
+    uint pictureOffset;
+    uint paletteOffset;
+
+    local int64 cursor = FTell();
+    FSeek(top + offsetDataOffset);
+    ubyte offsetData[gsInfoCount];
+
+    FSeek(top + dataTransferOffset);
+    dataTransfer clutTransfer;
+    dataTransfer textureTransfer[textureTransferCount];
+
+    FSeek(top + gsInfoOffset);
+    gsInfo gsInfoList[gsInfoCount];
+
+    FSeek(top + pictureOffset);
+    ubyte pictureData[paletteOffset -pictureOffset];
+
+    FSeek(top + paletteOffset);
+    ubyte paletteData[4 * colorsCount];
+
+    local int64 footerOffset = top + paletteOffset + 4 * colorsCount;
+    local char key[4];
+    local int64 subTop;
+    while (true) {
+        subTop = FTell();
+        texAnimChunk chunk;
+        if (Strcmp(chunk.key, "_KN5") == 0) {
+            break;
+        }
+    }
+
+    FSeek(cursor);
+};
+
+void ReadModelTexture() {
+    local int64 top = FTell();
+
+    modelTextureFileHeader texHdr(top);
+}

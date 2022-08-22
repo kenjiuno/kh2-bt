@@ -1,0 +1,583 @@
+// Use kh2-bar.bt
+
+enum<int> pppName {
+  pppDummyFunc=0,
+  pppKeThRes=1,
+  pppKeThRes8=2,
+  pppKeThRes8x4=3,
+  pppKeThRes8x128=4,
+  pppKeThRes16=5,
+  pppKeThRes16x4=6,
+  pppKeThRes16x64=7,
+  pppKeThRes24=8,
+  pppKeThRes24x4=9,
+  pppKeThRes32=10,
+  pppKeThRes32x4=11,
+  pppKeThRes32x32=12,
+  pppKeThRes40=13,
+  pppKeThRes40x4=14,
+  pppKeThRes48=15,
+  pppKeThRes48x4=16,
+  pppKeThRes64=17,
+  pppKeThRes64x4=18,
+  pppKeThRes64x16=19,
+  pppKeThRes128=20,
+  pppKeThRes128x4=21,
+  pppKeThRes128x8=22,
+  pppKeThRes255=23,
+  pppKeThRes255x4=24,
+  pppKeHitBall=25,
+  pppKeGrvTgt=26,
+  pppAccele=27,
+  pppAngAccele=28,
+  pppSclAccele=29,
+  pppColAccele=30,
+  pppEiWfacc=31,
+  pppKeHmgEff=32,
+  pppKeGrvEff=33,
+  pppKeHitChkPxB=34,
+  pppMove=35,
+  pppAngMove=36,
+  pppSclMove=37,
+  pppColMove=38,
+  pppPoint=39,
+  pppAngle=40,
+  pppScale=41,
+  pppColor=42,
+  pppPObjPoint=43,
+  pppVertexAttend=44,
+  pppEiWindFun=45,
+  pppKeMvYpEff=46,
+  pppKeDrct=47,
+  pppVtMime=48,
+  pppKeTkFade=49,
+  pppRandFloat=50,
+  pppRandUpFloat=51,
+  pppRandDownFloat=52,
+  pppRandChar=53,
+  pppRandUpChar=54,
+  pppRandDownChar=55,
+  pppRandShort=56,
+  pppRandUpShort=57,
+  pppRandDownShort=58,
+  pppRandInt=59,
+  pppRandUpInt=60,
+  pppRandDownInt=61,
+  pppRandFV=62,
+  pppRandUpFV=63,
+  pppRandDownFV=64,
+  pppRandIV=65,
+  pppRandUpIV=66,
+  pppRandDownIV=67,
+  pppRandCV=68,
+  pppRandUpCV=69,
+  pppRandDownCV=70,
+  pppRandHCV=71,
+  pppRandUpHCV=72,
+  pppRandDownHCV=73,
+  pppSRandFV=74,
+  pppSRandUpFV=75,
+  pppSRandDownFV=76,
+  pppSRandCV=77,
+  pppSRandUpCV=78,
+  pppSRandDownCV=79,
+  pppSRandHCV=80,
+  pppSRandUpHCV=81,
+  pppSRandDownHCV=82,
+  pppSMatrix=83,
+  pppKeMatSN=84,
+  pppMatrix=85,
+  pppMatrixXYZ=86,
+  pppMatrixXZY=87,
+  pppMatrixYZX=88,
+  pppMatrixYXZ=89,
+  pppMatrixZXY=90,
+  pppMatrixZYX=91,
+  pppMatrixLoc=92,
+  pppMatrixScl=93,
+  pppMatrixFront=94,
+  pppRyjMatrixNoRot=95,
+  pppKeMatPht=96,
+  pppRyjMatrixWorld=97,
+  pppRyjMatrixWorldXYZ=98,
+  pppRyjMatrixWorldXZY=99,
+  pppRyjMatrixWorldYXZ=100,
+  pppRyjMatrixWorldYZX=101,
+  pppRyjMatrixWorldZXY=102,
+  pppRyjMatrixWorldZYX=103,
+  pppParMatrix=104,
+  pppKeParMatR=105,
+  pppChrSclXYZMatrix=106,
+  pppChrSclXZMatrix=107,
+  pppChrSclYMatrix=108,
+  pppChrYSclXYZMatrix=109,
+  pppChrXSclXYZMatrix=110,
+  pppDrawMatrix=111,
+  pppDrawMatrixFront=112,
+  pppDrawMatrixNoRot=113,
+  pppDrawMatrixWood=114,
+  pppKeDMat=115,
+  pppKeDMatFr=116,
+  pppKeDMatPht=117,
+  pppKeDMatPhtFr=118,
+  pppRyjDrawMatrixWorld=119,
+  pppRyjDrawMatrixWorldFront=120,
+  pppRyjDrawMatrixWorldNoRot=121,
+  pppRyjDrawMatrixWorldWood=122,
+  pppKeZCrct=123,
+  pppKeZCrctShp=124,
+  pppKeThTp=125,
+  pppKeThTp2=126,
+  pppKeThSft=127,
+  pppKeTh=128,
+  pppDrawMdlBS=129,
+  pppDrawMdl=130,
+  pppDrawMdlSemi=131,
+  pppDrawMdlTs=132,
+  pppDrawMdl2=133,
+  pppDrawMdlSemi2=134,
+  pppDrawMdlTs2=135,
+  pppDrawMdl3=136,
+  pppDrawMdlSemi3=137,
+  pppDrawMdlTs3=138,
+  pppDrawMdlSea=139,
+  pppDrawShape=140,
+  pppDrawShapeX=141,
+  pppDrawShapeField=142,
+  pppKeMdlBmp=143,
+  pppKeMdlDtt=144,
+  pppKeMdlTfd=145,
+  pppKeMdlTfdUv=146,
+  pppKeMdlTfd2=147,
+  pppKeMdlTfdUv2=148,
+  pppKeMdlTfd3=149,
+  pppKeMdlTfdUv3=150,
+  pppKeShpTail=151,
+  pppKeShpTailX=152,
+  pppKeShpTail2=153,
+  pppKeShpTail2X=154,
+  pppKeShpTail3=155,
+  pppKeShpTail3X=156,
+  pppKeShpTailPht=157,
+  pppKeShpTailLc=158,
+  pppKeShpDtt=159,
+  pppRyjDrawShipoly=160,
+  pppDrawHook=161,
+  pppSDMatrix=162,
+  pppSCMatrix=163,
+  pppWMatrix=164,
+  pppWMatrixXYZ=165,
+  pppWMatrixXZY=166,
+  pppWMatrixYZX=167,
+  pppWMatrixYXZ=168,
+  pppWMatrixZXY=169,
+  pppWMatrixZYX=170,
+  pppPointAp=171,
+  pppPointRAp=172,
+  pppVertexAp=173,
+  pppSegmentAp=174,
+  pppFaceAp=175,
+  pppVertexApLc=176,
+  pppVertexApAt=177,
+  pppKeBornRnd=178,
+  pppKeBornRnd2=179,
+  pppKeBornRnd3=180,
+  pppKeBornRnd4=181,
+  pppKeBornRnd5=182,
+  pppKeBornRnd6=183,
+  pppKeBornPtCmpl=184,
+  pppKeHitBorn=185,
+  pppKeThHitBorn=186,
+  pppKeLnsLpSft=187,
+  pppKeLnsLp=188,
+  pppKeLnsArnd=189,
+  pppKeLnsClm=190,
+  pppKeLnsCrn=191,
+  pppKeLnsFls=192,
+  pppKeAcmSolid=193,
+  pppKeHitChk=194,
+  pppKeThLz=195,
+  pppKeThCp=196,
+  pppKeThCpSft=197,
+  pppKeAccSpdSv=198,
+  pppRyjDrawShipolyBone=199,
+  pppRyjMegaBirth=200,
+  pppRyjMngFlag=201,
+  pppRyjMegaBirthPrize=202,
+  pppRyjMegaPlace=203,
+  pppRyjMegaPlaceShape=204,
+  pppRyjMegaPlaceModel=205,
+  pppRyjMegaPlaceLamp=206,
+  pppRyjMegaBirthModel=207,
+  pppRyjDrawKekoto=208,
+  pppMoveLoop=209,
+  pppAngMoveLoop=210,
+  pppSclMoveLoop=211,
+  pppPointLoop=212,
+  pppAngleLoop=213,
+  pppScaleLoop=214,
+  pppMatrixLoop=215,
+  pppDrawMatrixLoop=216,
+  pppDrawMdlLoop=217,
+  pppDrawMdlLoopZ=218,
+  pppRyjLight=219,
+  pppKeLnsLpT=220,
+  pppKeLnsArndT=221,
+  pppKeLnsClmT=222,
+  pppKeLnsCrnT=223,
+  pppKeLnsFlsT=224,
+  pppRyjDrawMatrixWorldDtt=225,
+  pppRyjDrawMatrixWorldDttFr=226,
+  pppRyjMegaBirthFilter=227,
+  pppRyjMegaBirthModelFilter=228,
+  pppMatrixLoopXYZ=229,
+  pppMatrixLoopXZY=230,
+  pppMatrixLoopYXZ=231,
+  pppMatrixLoopYZX=232,
+  pppMatrixLoopZXY=233,
+  pppMatrixLoopZYX=234,
+  pppVertexApLcLoop=235,
+  pppSnoScaleAll=236,
+  pppSnoMdlDttNorm=237,
+  pppRyjMegaBirthUserCtrl=238,
+  pppRyjMegaBirthUserCtrl2=239,
+  pppEiDrawShipoly=240,
+  pppRyjMegaBirthUserCtrl3=241,
+};
+
+struct DpdHeader {
+    uint magicCode_96;
+
+    uint NumEffectsGroupList;
+    uint OffEffectsGroupList[NumEffectsGroupList];
+
+    uint NumTextures;
+    uint OffTextures[NumTextures];
+
+    uint NumTab3;
+    uint OffTab3[NumTab3];
+
+    uint NumTab4;
+    uint OffTab4[NumTab4];
+
+    uint NumTab5;
+    uint OffTab5[NumTab5];
+};
+
+struct DpdEffect {
+    uint OffsetNext;
+    uint Unk04;
+    uint Unk08;
+    uint Unk0C;
+    uint Unk10;
+    uint Unk14;
+    uint Unk18;
+    uint Unk1C;
+    uint Unk20;
+    ushort Unk24;
+    ushort CommandsCount;
+};
+
+struct DpdEffectCommand (int64 top) {
+    pppName Command <bgcolor=0xcc0000>;
+    ushort ParamLength;
+    ushort ParamCount;
+    uint OffsetParameters;
+    uint Offset2;
+
+    local int64 prev = FTell();
+    FSeek(top + OffsetParameters);
+    byte Raw[ParamCount * ParamLength] <bgcolor=0xcc0088>;
+    FSeek(top + Offset2);
+    byte Raw2[1] <bgcolor=0x0000cc>;
+    FSeek(prev);
+};
+
+string commentEffectsGroup(DpdEffectCommand &r) {
+    string s = "";
+    SPrintf(s, "%u"
+        , r.Command
+    );
+    return s;
+}
+
+struct EffectsGroup {
+    float Matrix1[16];
+    float Matrix2[16];
+    float Position[4];
+    float Rotation[4];
+    float Scaling[4];
+    uint Dummy[4];
+    uint Dummy1[4];
+    uint Dummy2[4];
+    uint Dummy3[4];
+    uint Dummy4[4];
+    uint Dummy5[4];
+    local int64 top = FTell();
+    uint Unk0;
+    uint Unk4;
+    uint UnkOff8;
+    uint UnkOffC;
+    local int nextOffset = 16;
+    local uint testNextOff;
+    while (true) {
+        FSeek(top + nextOffset);
+        testNextOff = ReadUInt();
+        if (testNextOff == 0) {
+            break;
+        }
+
+        FSeek(top + nextOffset);
+        DpdEffect effect;
+        DpdEffectCommand commands(top)[effect.CommandsCount] <comment=commentEffectsGroup,optimize=false>;
+
+        nextOffset = effect.OffsetNext;
+    }
+    FSeek(top + UnkOff8);
+    uint cnt8 <bgcolor=0xa30000>;
+    uint array8[cnt8];
+    
+    FSeek(top + UnkOffC);
+    uint cntC <bgcolor=0xa30000>;
+    uint arrayC[cntC];
+};
+
+struct EffectsTexture {
+    uint unk0;
+    ushort unk4;
+    ushort fmt;
+    uint unk8;
+    ushort width;
+    ushort height;
+    uint unk10;
+    uint unk14;
+    uint unk18;
+    uint unk1c;
+
+    if (fmt == 19) {
+        byte bitmap[width * height];
+        byte palette[1024];
+    }
+};
+
+struct EffectsTab3A {
+    ushort offset;
+    ushort flag;
+    uint unk;
+};
+
+struct EffectsTab3C {
+    ushort unk0;
+    ushort unk2;
+    ushort unk4;
+    ushort unk6;
+    ushort unk8;
+    ushort unka;
+    ushort unkc;
+    ushort unke;
+};
+
+struct EffectsTab3B {
+    ushort unk0;
+    ushort unk2;
+    uint size;
+    uint unk8;
+    uint unkc;
+
+    EffectsTab3C data[size / 16];
+};
+
+struct EffectsTab3 {
+    uint mark <bgcolor=0x008800>;
+    uint unk04;
+    uint unk08;
+    uint unk0c;
+    local int64 top = FTell();
+    uint unk10;
+    ushort cnt1;
+    ushort cnt2;
+    uint unk18;
+    uint unk1c;
+
+    EffectsTab3A a[cnt1];
+    local int i;
+    for (i=0; i<cnt1; i++) {
+        FSeek(top + a[i].offset);
+        EffectsTab3B b;
+    }
+};
+
+struct EffectsTab4Vtx6 {
+    uint rgba[4];
+    ushort vert[4];
+    ushort uv[2*4];
+};
+
+struct EffectsTab4Vtx4 {
+    uint rgba[4];
+    ushort vert[4];
+};
+
+struct EffectsTab4Vtx0 {
+    uint rgba[3];
+    ushort vert[3];
+    ushort pad;
+};
+
+struct EffectsTab4VertSet {
+    ushort vertFormat;
+    ushort numVerts;
+    uint unk34;
+    uint unk38;
+    uint unk3c;
+
+    if (vertFormat == 0x600) {
+        EffectsTab4Vtx6 verts6[numVerts];
+    }
+    else if (vertFormat == 0x400) {
+        EffectsTab4Vtx4 verts4[numVerts];
+    }
+    else if (vertFormat == 0) {
+        EffectsTab4Vtx0 verts0[numVerts];
+    }
+};
+
+struct EffectsTab4 (int64 top) {
+    uint mark <bgcolor=0x00cc00>;
+    uint unk04;
+    uint unk08;
+    uint unk0c;
+    uint unk10;
+    uint unk14;
+    uint offPoints;
+    uint offNorms;
+    ushort totalVerts;
+    ushort numPoints;
+    ushort unk24;
+    ushort unk26;
+    uint unk28;
+    uint unk2c;
+
+    local int readVerts = 0;
+    while (readVerts < totalVerts) {
+        EffectsTab4VertSet set;
+        readVerts += set.numVerts;
+    }
+
+
+    FSeek(top +offPoints);
+    short norms[3 * numPoints] <bgcolor=0x660000>;
+
+    FSeek(top +offNorms);
+    short points[3 * numPoints] <bgcolor=0x330000>;
+    short morePoints[3 * 3];
+};
+
+struct EffectsTab5 {
+    uint mark <bgcolor=0x00ff00>;
+    uint unk4;
+    uint unk8;
+    ushort unkc;
+    ushort unke;
+};
+
+void ReadDpd() {
+    local int64 top = FTell();
+    DpdHeader dpdHeader;
+
+    local int i;
+    local int g;
+    for (i=0; i<dpdHeader.NumEffectsGroupList; i++) {
+        FSeek(top + dpdHeader.OffEffectsGroupList[i]);
+        EffectsGroup effectsGroup;
+    }
+    for (i=0; i<dpdHeader.NumTextures; i++) {
+        FSeek(top + dpdHeader.OffTextures[i]);
+        EffectsTexture effectsTexture;
+    }
+    for (i=0; i<dpdHeader.NumTab3; i++) {
+        FSeek(top + dpdHeader.OffTab3[i]);
+        EffectsTab3 tab3;
+    }
+    for (i=0; i<dpdHeader.NumTab4; i++) {
+        FSeek(top + dpdHeader.OffTab4[i]);
+        EffectsTab4 tab4(FTell());
+    }
+    for (i=0; i<dpdHeader.NumTab5; i++) {
+        FSeek(top + dpdHeader.OffTab5[i]);
+        EffectsTab5 tab5;
+    }
+}
+
+struct DpxHeader {
+    uint magicCode_82;
+    uint Unk04;
+    uint Unk08;
+    uint dpxEntries;
+};
+
+struct DpxEntry {
+    uint DpdOffset;
+    uint Index;
+    uint Id;
+    uint Unk0C;
+    uint Unk10;
+    uint Unk14;
+    uint Unk18;
+    uint Unk1C;
+};
+
+void ReadDpx() {
+    local int64 top = FTell();
+
+    DpxHeader dpxHeader;
+    DpxEntry dpxEnts[dpxHeader.dpxEntries];
+    local int i;
+    for (i=0; i<dpxHeader.dpxEntries; i++) {
+        FSeek(top + dpxEnts[i].DpdOffset);
+        ReadDpd();
+    }
+}
+
+struct PaxEntry {
+    ushort Effect;
+    ushort Caster;
+    ushort Unk04;
+    ushort Unk06;
+    uint Unk08;
+    uint Unk0c;
+    uint Unk10;
+    uint Unk14;
+    uint SoundEffect;
+    float PosX;
+    float PosZ;
+    float PosY;
+    float RotX;
+    float RotZ;
+    float RotY;
+    float ScaleX;
+    float ScaleZ;
+    float ScaleY;
+    uint Unk40;
+    uint Unk44;
+    uint Unk48;
+    uint Unk4c;
+};
+
+struct PaxHeader {
+    char sig[4];
+    uint offsetName;
+    uint entriesCount;
+    uint offsetDpx;
+};
+
+void ReadPax() {
+    local int64 top = FTell();
+
+    PaxHeader paxHeader;
+    PaxEntry paxEnts[paxHeader.entriesCount];
+    FSeek(top + paxHeader.offsetName);
+    char Name[128];
+    FSeek(top + paxHeader.offsetDpx);
+    ReadDpx();
+}

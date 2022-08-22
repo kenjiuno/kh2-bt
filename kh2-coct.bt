@@ -1,0 +1,105 @@
+// Use kh2-bar.bt
+
+struct coctFileHeader {
+    char magic[4];
+    uint ver;
+    uint unk1;
+    uint unk2;
+    uint headerOffset;
+    uint headerLen;
+
+    uint collisionMeshGroupOffset;
+    uint collisionMeshGroupLen;
+
+    uint collisionMeshOffset;
+    uint collisionMeshLen;
+
+    uint collisionOffset;
+    uint collisionLen;
+
+    uint verticesOffset;
+    uint verticesLen;
+
+    uint planeOffset;
+    uint planeLen;
+
+    uint bboxOffset;
+    uint bboxLen;
+
+    uint surfaceFlagsOffset;
+    uint surfaceFlagsLen;
+};
+
+struct collisionMeshGroup {
+    ushort children[8];
+    short min[3];
+    short max[3];
+    ushort collisionMeshFirst;
+    ushort collisionMeshLast;
+};
+
+struct collisionMesh {
+    short min[3];
+    short max[3];
+    ushort collisionFirst;
+    ushort collisionLast;
+    ushort unk1;
+    ushort unk2;
+};
+
+struct collision {
+    ushort unk1;
+    ushort vertex[4];
+    ushort planeIndex;
+    ushort bboxIndex;
+    ushort surfaceFlagIndex;
+};
+
+struct coctVertex {
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+struct coctPlane {
+    float x;
+    float y;
+    float z;
+    float d;
+};
+
+struct coctBoundingBox {
+    short min[3];
+    short max[3];
+};
+
+enum <uint> SURFACEFLAGS {
+    SOLID_FLOOR = 0x3f1,
+};
+
+void ReadCoct() {
+    local int64 top = FTell();
+    coctFileHeader coctHdr;
+
+    FSeek(top + coctHdr.collisionMeshGroupOffset);
+    collisionMeshGroup coctMeshGrp[coctHdr.collisionMeshGroupLen / 32];
+
+    FSeek(top + coctHdr.collisionMeshOffset);
+    collisionMesh coctMesh[coctHdr.collisionMeshLen / 20];
+
+    FSeek(top + coctHdr.collisionOffset);
+    collision coctCollision[coctHdr.collisionLen / 16];
+
+    FSeek(top + coctHdr.verticesOffset);
+    coctVertex coctVertices[coctHdr.verticesLen / 16];
+
+    FSeek(top + coctHdr.planeOffset);
+    coctPlane coctPlanes[coctHdr.planeLen / 16];
+
+    FSeek(top + coctHdr.bboxOffset);
+    coctBoundingBox coctBBox[coctHdr.bboxLen / 12];
+
+    FSeek(top + coctHdr.surfaceFlagsOffset);
+    SURFACEFLAGS coctSurfFlags[coctHdr.surfaceFlagsLen / 4] <format=hex>;
+}

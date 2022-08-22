@@ -1,0 +1,121 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.2 Binary Template
+//
+//      File: BAR file
+//   Authors: kenjiuno, Disgustor and OpenKh contributors
+//   Version: 0
+//   Purpose: https://openkh.dev/kh2/file/type/bar.html
+//  Category: OpenKH (Kingdom Hearts II)
+// File Mask: *.bar
+//  ID Bytes: 42 41 52 01
+//   History: 
+//------------------------------------------------
+
+LittleEndian();
+BitfieldDisablePadding();
+
+#include "kh2-pax.bt"
+#include "kh2-model.bt"
+#include "kh2-doct.bt"
+#include "kh2-coct.bt"
+#include "kh2-texture.bt"
+#include "kh2-motion.bt"
+
+enum <ushort> ENTRYTYPE {
+    Dummy = 0,
+    Binary = 1,
+    List = 2,
+    Ai = 3,
+    Model = 4,
+    MeshOcclusion = 5,
+    MapCollision = 6,
+    ModelTexture = 7,
+    Dpx = 8,
+    AnimationData = 9,
+    Texture = 10,
+    CameraCollision = 11,
+    SpawnPoint = 12,
+    SpawnScript = 13,
+    MapColorDiffuse = 14,
+    LightData = 15,
+    MovesetInstructions = 16,
+    Bar = 17,
+    Pax = 18,
+    MapCollision2 = 19,
+    AnimationLimit = 20,
+    BobDescriptor = 21,
+    AnimationLoader = 22,
+    ModelCollision = 23,
+    Imgd = 24,
+    Seqd = 25,
+    Layout = 28,
+    Imgz = 29,
+    AnimationMap = 30,
+    Seb = 31,
+    Wd = 32,
+    Unknown33,
+    IopVoice = 34,
+    RawBitmap = 36,
+    MemoryCard = 37,
+    WrappedCollisionData = 38,
+    Unknown39,
+    Unknown40,
+    Unknown41,
+    Minigame = 42,
+    JimiData,
+    Progress = 44,
+    Synthesis,
+    BarUnknown = 46,
+    Vibration = 47,
+    Vag = 48,
+};
+
+struct barEntry {
+    ENTRYTYPE type;
+    ushort duplicate;
+    char name[4];
+    int offset;
+    int size;
+};
+
+struct barHeader {
+    char magic[4];
+    uint num_files;
+    uint zero;
+    uint msetFlag;
+    barEntry entries[num_files] <optimize=false>;
+};
+
+void ReadSubBar() {
+    local int64 top = FTell();
+    barHeader subBarHdr;
+
+    local int i;
+    for (i=0; i<subBarHdr.num_files; i++) {
+        FSeek(top + subBarHdr.entries[i].offset);
+        switch (subBarHdr.entries[i].type) {
+            case 9: ReadMotionHeader(); break;
+        }
+    }
+}
+
+void ReadBar() {
+    local int64 top = FTell();
+    barHeader barHdr;
+
+    local int i;
+    for (i=0; i<barHdr.num_files; i++) {
+        FSeek(top + barHdr.entries[i].offset);
+        switch (barHdr.entries[i].type) {
+            case 4: ReadModel(); break;
+            case 5: ReadDoct(); break;
+            case 6: ReadCoct(); break;
+            case 7: ReadModelTexture(); break;
+            case 9: ReadMotionHeader(); break;
+            case 17: ReadSubBar(); break;
+            case 18: ReadPax(); break;
+        }
+    }
+}
+
+ReadBar();

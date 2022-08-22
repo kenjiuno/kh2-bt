@@ -1,0 +1,41 @@
+// Use kh2-bar.bt
+
+struct doctFileHeader {
+    char magic[4];
+    uint ver;
+    uint unk;
+    uint headerOffset;
+    uint headerLen;
+    uint entry1Offset;
+    uint entry1Len;
+    uint entry2Offset;
+    uint entry2Len;
+    uint entry3Offset;
+    uint entry3Len;
+};
+
+struct doctEntry1 {
+    ushort children[8];
+    float min[3];
+    float max[3];
+    ushort entry2first;
+    ushort entry2last;
+    uint unk;
+};
+
+struct doctEntry2 {
+    uint flags <format=hex>;
+    float min[3];
+    float max[3];
+};
+
+void ReadDoct() {
+    local int64 top = FTell();
+    doctFileHeader doctHdr;
+
+    FSeek(top + doctHdr.entry1Offset);
+    doctEntry1 doctTable1[doctHdr.entry1Len / 48];
+
+    FSeek(top + doctHdr.entry2Offset);
+    doctEntry2 doctTable2[doctHdr.entry2Len / 28];
+}

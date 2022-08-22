@@ -1,0 +1,213 @@
+// Use kh2-bar.bt
+
+enum <ubyte> VIFCODE {
+    nop = 0,
+    stcycl = 1,
+    offset = 2,
+    base = 3,
+    itop = 4,
+    stmod = 5,
+    mskpath3 = 6,
+    mark = 7,
+    flushe = 16,
+    flush = 17,
+    flusha = 19,
+    mscal = 20,
+    mscnt = 23,
+    mscalf = 21,
+    stmask = 32,
+    strow = 48,
+    stcol = 49,
+    mpg = 74,
+    direct = 80,
+    directhl = 81,
+    unmasked_s_32 = 96,
+    unmasked_s_16 = 97,
+    unmasked_s_8 = 98,
+    unmasked_v2_32a = 100,
+    unmasked_v2_16a = 101,
+    unmasked_v2_8a = 102,
+    unmasked_v2_32b = 104,
+    unmasked_v3_16b = 105,
+    unmasked_v3_8b = 106,
+    unmasked_v4_32c = 108,
+    unmasked_v4_16c = 109,
+    unmasked_v4_8c = 110,
+    unmasked_v4_5 = 111,
+    masked_s_32a = 112,
+    masked_s_16a = 113,
+    masked_s_8a = 114,
+    masked_v2_32b = 116,
+    masked_v2_16b = 117,
+    masked_v2_8b = 118,
+    masked_v2_32c = 120,
+    masked_v3_16c = 121,
+    masked_v3_8c = 122,
+    masked_v4_32 = 124,
+    masked_v4_16 = 125,
+    masked_v4_8 = 126,
+    masked_v4_5 = 127,
+};
+
+struct vifCode {
+    ushort imm;
+    ubyte num;
+    VIFCODE cmd;
+};
+
+enum <uint> DMATAGID {
+    refe = 0,
+    cnt = 1,
+    next = 2,
+    ref = 3,
+    refs = 4,
+    call = 5,
+    ret = 6,
+    end = 7,
+};
+
+struct sourceChainDmaTag {
+    uint qwc : 16;
+    uint pad : 10;
+    uint pce : 2;
+    DMATAGID id : 3;
+    uint irq : 1;
+
+    uint addr;
+
+    vifCode vif[2];
+
+    if (id == 0 || id == 1 || id == 2 || id == 5) {
+        if (qwc >= 1) {
+            ubyte raw[16 * qwc];
+        }
+    }
+};
+
+struct dmaChainMap (int64 top) {
+    uint firstDmaTagOffset;
+    uint textureIndex;
+    ushort unk;
+    ushort transparentFlag;
+    
+    ubyte unk1 : 1;
+    ubyte enableUvsc : 1;
+    ubyte uvscIdx : 4;
+    ubyte unk2 : 2;
+    ubyte vd;
+    ubyte ve;
+    ubyte vf;
+
+    local int64 cursor = FTell();
+    FSeek(top + firstDmaTagOffset);
+    sourceChainDmaTag dmaTag;
+    FSeek(cursor);
+};
+
+struct vifPacketRenderingGroup (int64 top) {
+    uint offsetToGroup;
+
+    local int64 cursor = FTell();
+    FSeek(top + offsetToGroup);
+    ushort first;
+    FSeek(cursor);
+};
+
+struct mapHeader (int64 top) {
+    uint numDmaChainMaps;
+    ushort unk3;
+    ushort numVifPacketRenderingGroup;
+    uint offVifPacketRenderingGroup;
+    uint offDmaChainIndexRemapTable;
+    dmaChainMap dmaChainMaps(top)[numDmaChainMaps] <optimize=false>;
+
+    local int64 cursor = FTell();
+    FSeek(top + offVifPacketRenderingGroup);
+    vifPacketRenderingGroup vif_packet_rendering_group(top)[numVifPacketRenderingGroup] <optimize=false>;
+    FSeek(top + offDmaChainIndexRemapTable);
+    uint next_offset;
+    ushort dmaChainIndexRemapTable[numDmaChainMaps];
+    FSeek(cursor);
+};
+
+void ReadMapModel() {
+    local int64 top = FTell() -16;
+    mapHeader mapHdr(top);
+}
+
+struct objectMatrix {
+    int index;
+    int parent;
+    int unk1;
+    int unk2;
+    float scale[4];
+    float rotate[4];
+    float translation[4];
+};
+
+struct objectMatrixRef {
+    uint count;
+    int indices[count];
+};
+
+struct objectModelPart (int64 top) {
+    uint unk1;
+    uint texture_index;
+    uint unk2;
+    uint unk3;
+    uint offFirstDmaTag;
+    uint offMatrixRef;
+    uint totalQwc;
+    uint unk5;
+
+    local int64 cursor = FTell();
+    FSeek(top + offMatrixRef);
+    objectMatrixRef matrixRef;
+
+    FSeek(top + offFirstDmaTag);
+    sourceChainDmaTag dmaTag[totalQwc] <optimize=false>;
+
+    FSeek(cursor);
+};
+
+struct objectModelHeader (int64 top) {
+    ushort numMatrices;
+    ushort unk1;
+    uint matricesOffset;
+    uint unk2;
+    ushort numModelParts;
+    ushort unk3;
+    objectModelPart modelParts(top)[numModelParts] <optimize=false>;
+
+    if (matricesOffset != 0) {
+        FSeek(top + matricesOffset);
+        objectMatrix objMatrixList[numMatrices];
+    }
+};
+
+void ReadObjectModel() {
+    local int64 top = FTell() -16;
+    objectModelHeader objHdr(top);
+}
+
+enum <uint> MODELTYPE {
+    MAP = 2,
+    OBJECT = 3,
+    SHADOW = 4,
+};
+
+struct modelFileHeader {
+    MODELTYPE type;
+    uint unk1;
+    uint unk2;
+    uint next_off;
+};
+
+void ReadModel() {
+    FSkip(0x90);
+    modelFileHeader modelHdr;
+    switch (modelHdr.type) {
+        case 2: ReadMapModel(); break;
+        case 3: ReadObjectModel(); break;
+    }
+}
