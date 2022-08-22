@@ -95,6 +95,7 @@ void ReadSubBar() {
         FSeek(top + subBarHdr.entries[i].offset);
         switch (subBarHdr.entries[i].type) {
             case 9: ReadMotionHeader(); break;
+            case 16: ReadMotionTriggers(subBarHdr.entries[i].size); break;
         }
     }
 }
@@ -112,6 +113,7 @@ void ReadBar() {
             case 6: ReadCoct(); break;
             case 7: ReadModelTexture(); break;
             case 9: ReadMotionHeader(); break;
+            case 16: ReadMotionTriggers(barHdr.entries[i].size); break;
             case 17: ReadSubBar(); break;
             case 18: ReadPax(); break;
         }

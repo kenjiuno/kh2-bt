@@ -1,82 +1,121 @@
 // Use kh2-bar.bt
 
-struct T1 {
-    ushort joint;
-    ushort channel;
+typedef struct FVECTOR4 {
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+typedef struct FMATRIX44 {
+    FVECTOR4 v0;
+    FVECTOR4 v1;
+    FVECTOR4 v2;
+    FVECTOR4 v3;
+};
+
+typedef enum <uint16> TrackNo {
+    UNKNOWN=-1,
+    SCX=0,
+    SCY=1,
+    SCZ=2,
+    RTX=3,
+    RTY=4,
+    RTZ=5,
+    ETX=6,
+    ETY=7,
+    ETZ=8,
+} TrackNo;
+
+typedef struct InitialPose {
+    SetBackColor(cLtYellow);
+    ushort boneIndex;
+    TrackNo track; //channel
     float value;
 };
 
-string commentT1(T1 &r) {
+string commentInitialPose(InitialPose &r) {
     string s = "";
-    SPrintf(s, "%u, %u, %f", r.joint, r.channel, r.value);
+    SPrintf(s, "%u, %u, %f", r.boneIndex, r.track, r.value);
     return s;
 }
 
-struct T2 {
-    ushort joint;
-    ubyte channel:4;
+typedef struct FCurve {
+    ushort boneIndex;
+    TrackNo track:4;
     ubyte pre:2;
     ubyte post:2;
     ubyte keyCount;
-    ushort t9Idx;
+    ushort keyBase; //t9Idx
 };
 
-string commentT2(T2 &r) {
+string commentFCurve(FCurve &r) {
     string s = "";
     SPrintf(s, "%u, %u, %u, %u, %u, %u"
-        , r.joint
-        , r.channel
+        , r.boneIndex
+        , r.track
         , r.pre
         , r.post
         , r.keyCount
-        , r.t9Idx
+        , r.keyBase
     );
     return s;
 }
 
-struct T3 {
-    byte action;
-    byte unk1;
-    ushort targetIdx;
-    ushort srcIdx;
-    ushort unk2;
-    uint unk3;
+typedef enum <ubyte> CNS_TYPE {
+    CNS_POS=0,
+    CNS_PATH=1,
+    CNS_ORI=2,
+    CNS_DIR=3,
+    CNS_UPVCT=4,
+    CNS_2PNTS=5,
+    CNS_SCL=6,
+    CNS_CAM=7,
+    CNS_CAM_PATH=8,
+    CNS_INT_PATH=9,
+    CNS_INT=10,
+    CNS_CAM_UPVCT=11,
+    CNS_POS_LIM=12,
+    CNS_ROT_LIM=13,
+} CNS_TYPE;
+
+typedef struct Constraint {
+    SetBackColor(cLtYellow);
+    CNS_TYPE type;
+    ubyte temporary_active_flag;
+    ushort passive_id;
+    ushort active_id[2];
+    uint16 activation_num;
+    uint16 activation_base;
 };
 
-string commentT3(T3 &r) {
-    string s = "";
-    SPrintf(s, "%u, %u, %u, %u, %u, %u"
-        , r.action
-        , r.unk1
-        , r.targetIdx
-        , r.srcIdx
-        , r.unk2
-        , r.unk3
-    );
-    return s;
-}
+typedef struct Active {
+    SetBackColor(cLtRed);
+    float time;
+    uint32 active;
+};
 
-struct T4 {
+struct JointIndex {
+    SetBackColor(cLtRed);
     ushort joint;
-    ushort flags <format=hex>;
+    uint32 ik:2;
+    uint32 trans:1;
+    uint32 rotation:1;
+    uint32 fixed:1;
+    uint32 calculated:1;
+    uint32 calcMatrix2Rot:1;
+    uint32 extEffector:1;
+    uint32 reserved:8;
 };
-
-string commentT4(T4 &r) {
-    string s = "";
-    SPrintf(s, "%u, 0x%02X"
-        , r.joint
-        , r.flags
-    );
-    return s;
-}
 
 struct AxBone {
     int index;
     int parent;
-    int unk[2];
-    float sx, sy, sz, sw;
-    float rx, ry, rz, rw;
-    float tx, ty, tz, tw;
+    int32 reserved;
+    int32 flag;
+    FVECTOR4 scale;
+    FVECTOR4 rot;
+    FVECTOR4 trans;
 };
 
 string commentAxBone(AxBone &r) {
@@ -88,94 +127,185 @@ string commentAxBone(AxBone &r) {
     return s;
 }
 
-struct T9 {
-    ushort interp:2;
-    ushort t11Idx:14;
-    ushort t10Idx;
-    ushort t12IdxA;
-    ushort t12IdxB;
+typedef enum <uint16> TYPE {
+    TYPE_CONSTANT=0,
+    TYPE_LINEAR=1,
+    TYPE_HERMITE=2,
+} TYPE;
+
+struct FCurveKey {
+    SetBackColor(cLtGreen);
+    TYPE type:2;
+    uint16 time:14; //ushort t11Idx:14;
+    uint16 value; //ushort t10Idx;
+    uint16 left; //ushort t12IdxA;
+    uint16 right; //ushort t12IdxB;
 };
 
-string commentT9(T9 &r) {
+string commentFCurveKey(FCurveKey &r) {
     string s = "";
     SPrintf(s, "%u, %u, %u, %u, %u"
-        , r.interp
-        , r.t11Idx
-        , r.t10Idx
-        , r.t12IdxA
-        , r.t12IdxB
+        , r.type
+        , r.time
+        , r.value
+        , r.left
+        , r.right
     );
     return s;
 }
 
-struct T6 {
-    short a;
-    short boneIdx;
-    float c;
-    short nextIdx1;
-    short nextIdx2;
+typedef enum EXPR_TYPE {
+    EXPR_UNKNOWN=-1,
+    FUNC_SIN=0,
+    FUNC_COS=1,
+    FUNC_TAN=2,
+    FUNC_ASIN=3,
+    FUNC_ACOS=4,
+    FUNC_ATAN=5,
+    FUNC_LOG=6,
+    FUNC_EXP=7,
+    FUNC_ABS=8,
+    FUNC_POW=9,
+    FUNC_SQRT=10,
+    FUNC_MIN=11,
+    FUNC_MAX=12,
+    FUNC_AV=13,
+    FUNC_COND=14,
+    FUNC_AT_FRAME=15,
+    FUNC_CTR_DIST=16,
+    FUNC_FMOD=17,
+    OP_PLUS=18,
+    OP_MINUS=19,
+    OP_MUL=20,
+    OP_DIV=21,
+    OP_MOD=22,
+    OP_EQ=23,
+    OP_GT=24,
+    OP_GE=25,
+    OP_LT=26,
+    OP_LE=27,
+    OP_AND=28,
+    OP_OR=29,
+    VARIABLE_FC=30,
+    CONSTANT_NUM=31,
+    FCURVE_ETRNX=32,
+    FCURVE_ETRNY=33,
+    FCURVE_ETRNZ=34,
+    FCURVE_ROTX=35,
+    FCURVE_ROTY=36,
+    FCURVE_ROTZ=37,
+    FCURVE_SCALX=38,
+    FCURVE_SCALY=39,
+    FCURVE_SCALZ=40,
+    LIST=41,
+    ELEMENT_NAME=42,
+    FUNC_AT_FRAME_ROT=43,
+} EXPR_TYPE;
+
+struct ExpressionNode {
+    EXPR_TYPE type:8;
+    uint32 isGlobal:1;
+    uint32 reserved:7;
+    uint32 element:16;
+    float value;
+    uint16 car;
+    uint16 cdr;
 };
 
-struct T7 {
+struct Expression {
+    SetBackColor(cLtPurple);
     short boneIdx;
-    short channel;
-    short c;
-    short t6Idx;
+    TrackNo track;
+    short reserved;
+    short node; //t6Idx
 };
 
-struct T8 {
-    int a;
-    int b;
-    float c;
-    float d;
-    float e0;
-    float e1;
-    float e2;
-    float e3;
-    float f0;
-    float f1;
-    float f2;
-    float f3;
+typedef enum LIM_TYPE {
+    LIM_ROT=0,
+    LIM_SPHERE=1,
+    LIM_BOX=2,
+} LIM_TYPE;
+
+struct ConstraintLimiter {
+    SetBackColor(cLtGreen);
+    LIM_TYPE type:3;
+    uint32 global:1;
+    uint32 xmin:1;
+    uint32 xmax:1;
+    uint32 ymin:1;
+    uint32 ymax:1;
+    uint32 zmin:1;
+    uint32 zmax:1;
+    uint32 reserved:22;
+    int32 padding;
+    float dampingWidth;
+    float dampingStrength;
+    FVECTOR4 min;
+    FVECTOR4 max;
+};
+
+typedef enum MOTION_TYPE {
+    PROTOTYPE_0=0,
+    RAW=1,
+} MOTION_TYPE;
+
+typedef enum MOTION_SUBTYPE {
+    NORMAL=0,
+    IGNORE_SCALE=1,
+} MOTION_SUBTYPE;
+
+typedef struct PositionInfo {
+    SetBackColor(cLtGreen);
+    float scale[3];
+    int not_unit;
+    struct FVECTOR4 rot;
+    struct FVECTOR4 trans;
+    int fcurve_index[9];
+    int reserved[3];
 };
 
 struct MotionHeader (int64 top) {
-    uint version;
-    uint unk1a;
-    uint byteCount;
-    uint unk1b;
-    
+    SetBackColor(cLtGreen);
+    MOTION_TYPE type;
+    MOTION_SUBTYPE subType;
+    uint extraOffset;
+    uint extraSize;
+
+    SetBackColor(cNone);
+
     // 0: compressed format
-    if (version == 0) {
-        ushort cntBones1;
-        ushort cntBones2;
+    if (type == 0) {
+        SetBackColor(cLtGreen);
+        ushort numFKBones;
+        ushort numFKIKBones;
         uint TotalFrameCount;
-        uint offT5 <format=hex>;
-        uint offT4 <format=hex>;
+        uint ikBoneOffset <format=hex>;
+        uint jointIndexOffset <format=hex>;
     
-        uint cntT11;
-        uint offT1 <format=hex>;
-        uint cntT1;
-        uint unkOff1 <format=hex>;
+        uint keyTimeCount;
+        uint initialPoseOffset <format=hex>;
+        uint initialPoseCount;
+        uint positionInfoOffset <format=hex>;
     
-        uint offT2 <format=hex>;
-        uint cntT2;
-        uint offT2x <format=hex>;
-        uint cntT2x;
+        uint fcurveForwardOffset <format=hex>;
+        uint fcurveForwardCount;
+        uint fcurveInverseOffset <format=hex>;
+        uint fcurveInverseCount;
     
-        uint offT9 <format=hex>;
-        uint offT11 <format=hex>;
-        uint offT10 <format=hex>;
-        uint offT12 <format=hex>;
+        uint fcurveKeyOffset <format=hex>;
+        uint keyTimeOffset <format=hex>;
+        uint keyValueOffset <format=hex>;
+        uint keyTangentOffset <format=hex>;
     
-        uint offT3 <format=hex>;
-        uint cntT3;
-        uint unkOff2 <format=hex>;
-        uint offT8 <format=hex>;
+        uint constraintOffset <format=hex>;
+        uint constraintCount;
+        uint activeOffset <format=hex>;
+        uint constraintLimiterOffset <format=hex>;
     
-        uint offT7 <format=hex>;
-        uint cntT7;
-        uint offT6 <format=hex>;
-        uint cntT6;
+        uint expressionOffset <format=hex>;
+        uint expressionCount;
+        uint expressionOffset <format=hex>;
+        uint expressionCount;
 
         float min[4];
         float max[4];
@@ -183,55 +313,72 @@ struct MotionHeader (int64 top) {
         float FrameEnd;
         float FramePerSecond;
         float FrameCount;
-        uint unk5[4];
+        uint32 extEffector_offset;
+        uint32 reserved[3];
 
-        FSeek(top +offT1);
-        T1 t1[cntT1] <comment=commentT1>;
+        SetBackColor(cNone);
+
+        FSeek(top +initialPoseOffset);
+        InitialPose initialPose[initialPoseCount] <comment=commentInitialPose>;
     
-        FSeek(top +offT2);
-        T2 t2[cntT2] <comment=commentT2>;
+        FSeek(top +fcurveForwardOffset);
+        SetBackColor(cLtGreen);
+        FCurve fcurveForward[fcurveForwardCount] <comment=commentFCurve>;
     
-        FSeek(top +offT2x);
-        T2 t2x[cntT2x] <comment=commentT2>;
-    
-        FSeek(top +offT9);
-        T9 t9[1] <comment=commentT9>;
+        FSeek(top +fcurveInverseOffset);
+        SetBackColor(cLtRed);
+        FCurve fcurveInverse[fcurveInverseCount] <comment=commentFCurve>;
 
-        FSeek(top +offT11);
-        float t11[1];
+        SetBackColor(cNone);
 
-        FSeek(top +offT10);
-        float t10[1];
+        local int fcurveKeyCount = ((keyTimeOffset - fcurveKeyOffset)/8);
+        FSeek(top +fcurveKeyOffset);
+        FCurveKey fcurveKey[fcurveKeyCount] <comment=commentFCurveKey,optimize=false>;
 
-        FSeek(top +offT12);
-        float t12[1];
+        FSeek(top +keyTimeOffset);
+        SetBackColor(cLtBlue);
+        float keyTime[keyTimeCount];
 
-        FSeek(top +offT3);
-        T3 t3[cntT3] <comment=commentT3>;
+        local int keyValueCount = (keyTangentOffset - keyValueOffset) / 4;
+        FSeek(top +keyValueOffset);
+        SetBackColor(cLtYellow);
+        float keyValue[keyValueCount];
 
-        FSeek(top +unkOff2);
-        int unk2;
+        local int keyTangentCount = (constraintOffset - keyTangentOffset) / 4;
+        FSeek(top +keyTangentOffset);
+        SetBackColor(cLtRed);
+        float keyTangent[keyTangentCount];
 
-        FSeek(top +offT8);
-        T8 t8[(offT7-offT8)/48];
+        SetBackColor(cNone);
 
-        FSeek(top +offT7);
-        T7 t7[cntT7];
+        FSeek(top +constraintOffset);
+        Constraint constraint[constraintCount];
 
-        FSeek(top +offT6);
-        T6 t6[cntT6];
+        local int activeCount = (constraintLimiterOffset - activeOffset) / 8;
+        FSeek(top +activeOffset);
+        Active active[activeCount];
 
-        FSeek(top +offT5);
-        AxBone t5[cntBones2-cntBones1]  <comment=commentAxBone>;
+        FSeek(top +constraintLimiterOffset);
+        ConstraintLimiter constraintLimiter[(expressionOffset-constraintLimiterOffset)/48] <optimize=false>;
 
-        FSeek(top +offT4);
-        T4 t4[cntBones2] <comment=commentT4>;
+        FSeek(top +expressionOffset);
+        Expression expression[expressionCount] <optimize=false>;
 
-        FSeek(top +unkOff1);
-        float unkvec[4*3];
+        FSeek(top +expressionOffset);
+        ExpressionNode expressionNode[expressionCount] <optimize=false>;
+
+        FSeek(top +ikBoneOffset);
+        AxBone ikBone[numFKIKBones-numFKBones]  <comment=commentAxBone>;
+
+        FSeek(top +jointIndexOffset);
+        JointIndex jointIndex[numFKIKBones];
+
+        FSeek(top +positionInfoOffset);
+        PositionInfo positionInfo;
     }
     // 1: uncompressed form
-    if (version == 1) {
+    if (type == 1) {
+        SetBackColor(cLtGreen);
         // format imported from OpenKh:
         // - https://github.com/Xeeynamo/OpenKh/pull/293/files
         uint BoneCount;
@@ -239,19 +386,21 @@ struct MotionHeader (int64 top) {
         uint Unk18;
         uint Unk1c;
 
-        uint Unk20;
+        uint frame_num;
         uint TotalFrameCount;
-        uint Unk28;
-        uint Unk2c;
+        uint matrix_offset;
+        uint position_info_offset;
 
-        float min[4];
-        float max[4];
-        float FrameLoop;
-        float FrameEnd;
-        float FramePerSecond;
-        float FrameCount;
-        
-        float Matrices[16*BoneCount*TotalFrameCount];
+        FVECTOR4 min;
+        FVECTOR4 max;
+        float startFrame;
+        float endFrame;
+        float fps;
+        float retFrame;
+
+        SetBackColor(cNone);
+
+        FMATRIX44 rawframe[BoneCount*TotalFrameCount];
     }
 
 };
@@ -260,4 +409,141 @@ void ReadMotionHeader() {
     FSkip(0x90);
     local int64 top = FTell();
     MotionHeader motion(top);
+}
+
+typedef enum <ubyte> {
+    JumpState = 0,
+    PlayPAXeffectfromafm = 1,
+    Playfootstepsound = 2,
+    DuskJumpStateanimationinslot628 = 3,
+    Textureanimationstart = 4,
+    TextureanimationstopUNUSED = 5,
+    UseItemeffect = 6,
+    unknownLIMITAnmatrCallbackLimitRC = 7,
+    PlaySEsoundfromafm = 8,
+    unknownVariousTrigger1 = 9,
+    unknownVariousTrigger2 = 10,
+    unknownVariousTrigger4 = 11,
+    unknownVariousTrigger8 = 12,
+    Playsanenemyvsbvoice = 13,
+    Playsanallyvsbvoice = 14,
+    TurntoTarget = 15,
+    unknownDisableCommandTimeEgWhenhitonair = 16,
+    Magiccast = 17,
+    UNDEFINED = 18,
+    ApplyfootstepeffectFootprintwatersplashes = 19,
+    UNDEFINED20 = 20,
+    Turntolockon21 = 21,
+    Makesthekeybladeappear = 22,
+    FadestartOpacitydecrease = 23,
+    FadestartOpacityincrease = 24,
+    unknownRelatedtotheparty = 25,
+    Setmeshcolor = 26,
+    Resetmeshcolor = 27,
+    Revengecheck = 28,
+    PlaysaKeybladeappearancesprite = 29,
+    unknownLIMITPlayVoiceUNUSED = 30,
+    Triggervibration = 31,
+    UNDEFINED32 = 32,
+    UNDEFINED33 = 33,
+    CheckforDodgeRolltoAirslideQuickRun = 34,
+    unknownMOTIONstartEgdodgeroll = 35,
+} FrameTriggerID;
+
+typedef struct FrameTrigger {
+    SetBackColor(cLtGreen);
+    short triggerFrame;
+    FrameTriggerID frameTriggerID;
+    byte paramSize;
+
+    SetBackColor(cLtYellow);
+    ushort param[paramSize] <optimize=false>;
+};
+
+typedef enum <ubyte> {
+    STATEGrounded = 0,
+    STATEFalling = 1,
+    STATEGrounded2 = 2,
+    STATENogravity = 3,
+    Enablecollisionflag = 4,
+    Disablecollisionflag = 5,
+    EnableRECOMflag = 6,
+    DisableRECOMflagUNUSED = 7,
+    unknownPrintsusingNO_DAMAGE_REACTIONattributeUNUSED = 8,
+    STATEunknown = 9,
+    Motionattackon = 10,
+    STATEAllowscomboattack = 11,
+    STATEunknown12 = 12,
+    STATEunknown13 = 13,
+    STATEAllowsBattleRCs = 14,
+    STATEunknownUNUSED = 15,
+    unknownMobilityenhancementegLWsdash = 16,
+    unknownAIcombo1 = 17,
+    unknownAIcombo2 = 18,
+    unknownDisableforcediframesegLWsidlegroundandair = 19,
+    ReactionCommandSelf = 20,
+    STATEunknown21 = 21,
+    Turntotarget = 22,
+    Textureanimation = 23,
+    PROPERTYunknownDisablegravitybutkeepskinetics = 24,
+    PROPERTYunknownAnmatrCommandReactioncommandonotherobject = 25,
+    PROPERTYunknownAnmatrCommand = 26,
+    STATEHitboxoffCantbehit = 27,
+    Turntolockon = 28,
+    STATEunknownCantfalloffedgeseasily = 29,
+    STATEunknownFreezeanimationImmovable = 30,
+    STATEunknown31 = 31,
+    STATEunknown32 = 32,
+    motionattackonEnemy = 33,
+    STATEunknownUNUSED34 = 34,
+    STATEunknownEgFireMakesfirecountascombo = 35,
+    PatternenableLWattacksTeleporttoplayer = 36,
+    Patterndisable = 37,
+    STATEunknown38 = 38,
+    STATEunknownUNUSED39 = 39,
+    STATEunknown40 = 40,
+    STATEunknown41 = 41,
+    STATEunknownEglandingusingitems = 42,
+    STATEunknownUNUSED43 = 43,
+    STATEunknownEgExplosionfinisherLWbowNotmovablebyotherobjects = 44,
+    STATEunknownUNUSED45 = 45,
+    STATEunknownUNUSED46 = 46,
+    STATEunknown47 = 47,
+    STATEunknownUNUSED48 = 48,
+    STATEunknownEgDodgeroll = 49,
+    STATEunknownAllowscombofinishernext = 50,
+    PlaysingletonSE = 51,
+    STATEunknown52 = 52,
+    STATEunknown53 = 53,
+} RangeTriggerID;
+
+typedef struct RangeTrigger {
+    SetBackColor(cLtGreen);
+    short startFrame;
+    short endFrame;
+    RangeTriggerID rangeTriggerID;
+    byte paramSize;
+
+    SetBackColor(cLtYellow);
+    ushort param[paramSize] <optimize=false>;
+};
+
+typedef struct MotionTrigger(int length) {
+    local int64 top = FTell();
+
+    SetBackColor(cLtGreen);
+    byte rangeTriggerCount;
+    byte frameTriggerCount;
+    ushort frameTriggerOffset;
+    SetBackColor(cNone);
+
+    RangeTrigger rangeTrigger[rangeTriggerCount] <optimize=false>;
+
+    FSeek(top + frameTriggerOffset);
+    FrameTrigger frameTrigger[frameTriggerCount] <optimize=false>;
+
+};
+
+void ReadMotionTriggers(int length) {
+    MotionTrigger motionTrigger(length);
 }
