@@ -1,4 +1,4 @@
-// Use kh2-bar.bt
+// Used by kh2-bar.bt
 
 struct doctFileHeader {
     char magic[4];

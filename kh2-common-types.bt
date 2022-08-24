@@ -1,0 +1,21 @@
+// Used by kh2-bar.bt
+
+typedef struct FVECTOR4 {
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+typedef struct VECTOR_U16x2 {
+    ushort x;
+    ushort y;
+};
+
+typedef struct FMATRIX44 {
+    FVECTOR4 v0;
+    FVECTOR4 v1;
+    FVECTOR4 v2;
+    FVECTOR4 v3;
+};
+

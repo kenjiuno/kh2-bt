@@ -14,6 +14,7 @@
 LittleEndian();
 BitfieldDisablePadding();
 
+#include "kh2-common-types.bt"
 #include "kh2-pax.bt"
 #include "kh2-model.bt"
 #include "kh2-doct.bt"
@@ -79,11 +80,14 @@ struct barEntry {
 };
 
 struct barHeader {
+    SetBackColor(cLtGray);
     char magic[4];
     uint num_files;
     uint zero;
     uint msetFlag;
     barEntry entries[num_files] <optimize=false>;
+
+    SetBackColor(cNone);
 };
 
 void ReadSubBar() {
@@ -95,7 +99,7 @@ void ReadSubBar() {
         FSeek(top + subBarHdr.entries[i].offset);
         switch (subBarHdr.entries[i].type) {
             case 9: ReadMotionHeader(); break;
-            case 16: ReadMotionTriggers(subBarHdr.entries[i].size); break;
+            case 16: ReadMotionTriggers(); break;
         }
     }
 }
@@ -113,7 +117,7 @@ void ReadBar() {
             case 6: ReadCoct(); break;
             case 7: ReadModelTexture(); break;
             case 9: ReadMotionHeader(); break;
-            case 16: ReadMotionTriggers(barHdr.entries[i].size); break;
+            case 16: ReadMotionTriggers(); break;
             case 17: ReadSubBar(); break;
             case 18: ReadPax(); break;
         }

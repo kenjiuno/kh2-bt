@@ -1,4 +1,4 @@
-// Use kh2-bar.bt
+// Used by kh2-bar.bt
 
 enum <ubyte> VIFCODE {
     nop = 0,
@@ -48,6 +48,67 @@ enum <ubyte> VIFCODE {
     masked_v4_8 = 126,
     masked_v4_5 = 127,
 };
+
+typedef struct {
+    ushort imm;
+    byte num;
+    byte cmd;
+} VIFnop;
+
+typedef struct {
+    ushort imm;
+    byte num;
+    byte cmd;
+} VIFflushe;
+
+typedef struct {
+    byte cl;
+    byte imm_wl;
+    byte num;
+    byte cmd;
+} VIFstcycl;
+
+typedef struct VIFunpack6c { // V4-32
+    ushort addr:10;
+    ushort skip:4;
+    ushort usn:1;
+    ushort flg:1;
+    byte num_size;
+    byte cmd;
+
+    SetBackColor(cLtYellow);
+    FVECTOR4 data[num_size];
+};
+
+typedef struct VIFunpack65 { // V2-16
+    ushort addr:10;
+    ushort skip:4;
+    ushort usn:1;
+    ushort flg:1;
+    byte num_size;
+    byte cmd;
+
+    SetBackColor(cLtYellow);
+    VECTOR_U16x2 data[num_size];
+};
+
+typedef struct (int size) {
+    local int64 endPos = FTell() + size;
+    local uchar cmd;
+    while (FTell() < endPos) {
+        cmd = ReadUByte(FTell() +3) & 0x7F;
+
+        SetBackColor(cLtBlue);
+        switch (cmd) {
+            case 0: VIFnop vifcmd; break;
+            case 1: VIFstcycl vifcmd; break;
+            case 0x6c: VIFunpack6c vifcmd; break;
+            case 0x65: VIFunpack65 vifcmd; break;
+            case 0x20: VIFflushe vifcmd; break;
+            default: return;
+        }
+    }
+} VIFPacket;
 
 struct vifCode {
     ushort imm;
@@ -100,7 +161,9 @@ struct dmaChainMap (int64 top) {
 
     local int64 cursor = FTell();
     FSeek(top + firstDmaTagOffset);
+    SetBackColor(cLtRed);
     sourceChainDmaTag dmaTag;
+    SetBackColor(cLtBlue);
     FSeek(cursor);
 };
 
@@ -114,52 +177,158 @@ struct vifPacketRenderingGroup (int64 top) {
 };
 
 struct mapHeader (int64 top) {
+    SetBackColor(cLtGreen);
     uint numDmaChainMaps;
     ushort unk3;
     ushort numVifPacketRenderingGroup;
     uint offVifPacketRenderingGroup;
     uint offDmaChainIndexRemapTable;
+    SetBackColor(cLtBlue);
     dmaChainMap dmaChainMaps(top)[numDmaChainMaps] <optimize=false>;
 
     local int64 cursor = FTell();
     FSeek(top + offVifPacketRenderingGroup);
+    SetBackColor(cLtYellow);
     vifPacketRenderingGroup vif_packet_rendering_group(top)[numVifPacketRenderingGroup] <optimize=false>;
     FSeek(top + offDmaChainIndexRemapTable);
+    SetBackColor(cLtBlue);
     uint next_offset;
     ushort dmaChainIndexRemapTable[numDmaChainMaps];
     FSeek(cursor);
+
+    SetBackColor(cNone);
 };
 
 void ReadMapModel() {
     local int64 top = FTell() -16;
+    SetBackColor(cLtGreen);
     mapHeader mapHdr(top);
+    SetBackColor(cNone);
 }
 
-struct objectMatrix {
-    int index;
-    int parent;
-    int unk1;
-    int unk2;
-    float scale[4];
-    float rotate[4];
-    float translation[4];
+struct PARTNAME {
+	int32 PART_LF_HEAD;
+	int32 PART_RF_HEAD;
+	int32 PART_LB_HEAD;
+	int32 PART_RB_HEAD;
+	int32 PART_LF_NECK;
+	int32 PART_RF_NECK;
+	int32 PART_LB_NECK;
+	int32 PART_RB_NECK;
+	int32 PART_LF_CHEST;
+	int32 PART_RF_CHEST;
+	int32 PART_LB_CHEST;
+	int32 PART_RB_CHEST;
+	int32 PART_LF_HIP;
+	int32 PART_RF_HIP;
+	int32 PART_LB_HIP;
+	int32 PART_RB_HIP;
+	int32 PART_LF_COLLAR;
+	int32 PART_RF_COLLAR;
+	int32 PART_LB_COLLAR;
+	int32 PART_RB_COLLAR;
+	int32 PART_LF_UPARM;
+	int32 PART_RF_UPARM;
+	int32 PART_LB_UPARM;
+	int32 PART_RB_UPARM;
+	int32 PART_LF_FOARM;
+	int32 PART_RF_FOARM;
+	int32 PART_LB_FOARM;
+	int32 PART_RB_FOARM;
+	int32 PART_LF_HAND;
+	int32 PART_RF_HAND;
+	int32 PART_LB_HAND;
+	int32 PART_RB_HAND;
+	int32 PART_LF_FEMUR;
+	int32 PART_RF_FEMUR;
+	int32 PART_LB_FEMUR;
+	int32 PART_RB_FEMUR;
+	int32 PART_LF_TIBIA;
+	int32 PART_RF_TIBIA;
+	int32 PART_LB_TIBIA;
+	int32 PART_RB_TIBIA;
+	int32 PART_LF_FOOT;
+	int32 PART_RF_FOOT;
+	int32 PART_LB_FOOT;
+	int32 PART_RB_FOOT;
+	int32 PART_LF_TOES;
+	int32 PART_RF_TOES;
+	int32 PART_LB_TOES;
+	int32 PART_RB_TOES;
+	int32 PART_WEAPON_L_LINK;
+	int32 PART_WEAPON_L;
+	int32 PART_WEAPON_R_LINK;
+	int32 PART_WEAPON_R;
+	int32 PART_SPECIAL0;
+	int32 PART_SPECIAL1;
+	int32 PART_SPECIAL2;
+	int32 PART_SPECIAL3;
+};
+
+struct ModelSKLRAWBone {
+    SetBackColor(cLtYellow);
+    FVECTOR4 bbox_min;
+    FVECTOR4 bbox_max;
+    FVECTOR4 ik_bone_bias;
+    PARTNAME partName;
+    FVECTOR4 distanceFromSkeleton;
+};
+
+struct Flag {
+    uint32 no_envelope:1;
+    uint32 not_joint:1;
+    uint32 reserved:30;
+};
+
+struct ModelHRC {
+    SetBackColor(cLtBlue);
+    int16 id;
+    int16 sibling_id;
+    int16 parent_id;
+    int16 child_id;
+    int32 reserved;
+    struct Flag flag;
+    FVECTOR4 scale;
+    FVECTOR4 rot;
+    FVECTOR4 trans;
 };
 
 struct objectMatrixRef {
+    SetBackColor(cLtGreen);
     uint count;
+    SetBackColor(cLtBlue);
     int indices[count];
 };
 
+struct ModelSKLRAWAttribute {
+    uint32 drawAlphaPhase:1;
+    uint32 alpha:1;
+    uint32 multi:1;
+    uint32 reserved1:3;
+    uint32 part:5;
+    uint32 mesh:5;
+    uint32 priority:5;
+    uint32 alphaEx:1;
+    uint32 uvscroll:5;
+    uint32 alphaAdd:1;
+    uint32 alphaSub:1;
+    uint32 specular:1;
+    uint32 noLight:1;
+    uint32 reserved2:1;
+};
+
 struct objectModelPart (int64 top) {
-    uint unk1;
+    ModelSKLRAWAttribute attribute;
     uint texture_index;
-    uint unk2;
-    uint unk3;
+    uint polygon_num;
+    uint16 hasVB;
+    uint16 alt;
     uint offFirstDmaTag;
     uint offMatrixRef;
     uint totalQwc;
     uint unk5;
 
+    SetBackColor(cLtBlue);
     local int64 cursor = FTell();
     FSeek(top + offMatrixRef);
     objectMatrixRef matrixRef;
@@ -167,45 +336,69 @@ struct objectModelPart (int64 top) {
     FSeek(top + offFirstDmaTag);
     sourceChainDmaTag dmaTag[totalQwc] <optimize=false>;
 
+    local int x;
+    for (x=0; x<totalQwc; x++) {
+        if (dmaTag[x].qwc != 4 && dmaTag[x].id == 3) {
+            FSeek(top + dmaTag[x].addr);
+            VIFPacket vif(16 * dmaTag[x].qwc);
+        }
+    }
+
     FSeek(cursor);
 };
 
 struct objectModelHeader (int64 top) {
     ushort numMatrices;
-    ushort unk1;
+    ushort texture_num;
     uint matricesOffset;
-    uint unk2;
-    ushort numModelParts;
-    ushort unk3;
+    uint bone_offset;
+    uint numModelParts;
     objectModelPart modelParts(top)[numModelParts] <optimize=false>;
+
+    FSeek(top + bone_offset);
+    ModelSKLRAWBone bone;
 
     if (matricesOffset != 0) {
         FSeek(top + matricesOffset);
-        objectMatrix objMatrixList[numMatrices];
+        SetBackColor(cLtBlue);
+        ModelHRC objMatrixList[numMatrices] <optimize=false>;
+        SetBackColor(cNone);
     }
 };
 
 void ReadObjectModel() {
     local int64 top = FTell() -16;
+    SetBackColor(cLtGreen);
     objectModelHeader objHdr(top);
+    SetBackColor(cNone);
 }
 
-enum <uint> MODELTYPE {
-    MAP = 2,
-    OBJECT = 3,
+typedef enum <uint> {
+    MULTI=-1,
+    BG=2, //MAP = 2,
+    SKL=3, //OBJECT = 3,
     SHADOW = 4,
-};
+} MODEL_TYPE;
 
-struct modelFileHeader {
-    MODELTYPE type;
-    uint unk1;
-    uint unk2;
-    uint next_off;
+typedef enum <uint> {
+    CHARAOBJ=0,
+    MAPBG=0,
+    BGOBJ=1,
+    SKYBG=1,
+} MODEL_SUBTYPE;
+
+struct ModelHeader {
+    MODEL_TYPE type;
+    MODEL_SUBTYPE subtype;
+    int32 attribute;
+    uint32 size;
 };
 
 void ReadModel() {
     FSkip(0x90);
-    modelFileHeader modelHdr;
+    SetBackColor(cLtGreen);
+    ModelHeader modelHdr;
+    SetBackColor(cNone);
     switch (modelHdr.type) {
         case 2: ReadMapModel(); break;
         case 3: ReadObjectModel(); break;

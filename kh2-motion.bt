@@ -1,18 +1,4 @@
-// Use kh2-bar.bt
-
-typedef struct FVECTOR4 {
-    float x;
-    float y;
-    float z;
-    float w;
-};
-
-typedef struct FMATRIX44 {
-    FVECTOR4 v0;
-    FVECTOR4 v1;
-    FVECTOR4 v2;
-    FVECTOR4 v3;
-};
+// Used by kh2-bar.bt
 
 typedef enum <uint16> TrackNo {
     UNKNOWN=-1,
@@ -528,7 +514,7 @@ typedef struct RangeTrigger {
     ushort param[paramSize] <optimize=false>;
 };
 
-typedef struct MotionTrigger(int length) {
+typedef struct MotionTrigger() {
     local int64 top = FTell();
 
     SetBackColor(cLtGreen);
@@ -544,6 +530,6 @@ typedef struct MotionTrigger(int length) {
 
 };
 
-void ReadMotionTriggers(int length) {
-    MotionTrigger motionTrigger(length);
+void ReadMotionTriggers() {
+    MotionTrigger motionTrigger();
 }
