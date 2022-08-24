@@ -1,41 +1,57 @@
 // Used by kh2-bar.bt
 
-struct doctFileHeader {
+struct OctDrawHeader {
     char magic[4];
     uint ver;
-    uint unk;
+    int m_drawDepth;
     uint headerOffset;
     uint headerLen;
-    uint entry1Offset;
-    uint entry1Len;
-    uint entry2Offset;
-    uint entry2Len;
-    uint entry3Offset;
-    uint entry3Len;
+    uint DrawNodeOffset;
+    uint DrawNodeLen;
+    uint DrawModelInfoOffset;
+    uint DrawModelInfoLen;
+    uint LocateInfoOffset;
+    uint LocateInfoLen;
 };
 
-struct doctEntry1 {
+struct DrawNode {
     ushort children[8];
     float min[3];
     float max[3];
-    ushort entry2first;
-    ushort entry2last;
-    uint unk;
+    short m_drawModelStart;
+    short m_drawModelMax;
+    uint unk; //pointer to object draw list at runtime
 };
 
-struct doctEntry2 {
-    uint flags <format=hex>;
+struct DrawModelInfo {
+    char m_visible;
+    char m_group;
+    char m_floorlevel;
+    char m_pad;
     float min[3];
     float max[3];
+};
+
+struct LocateInfo {
+    float min[3];
+    float max[3];
+    float m_origin[3];
+    float m_scale[3];
+    char m_group;
+    char m_parts;
+    ushort m_id;
 };
 
 void ReadDoct() {
     local int64 top = FTell();
-    doctFileHeader doctHdr;
+    OctDrawHeader doctHdr;
 
-    FSeek(top + doctHdr.entry1Offset);
-    doctEntry1 doctTable1[doctHdr.entry1Len / 48];
+    FSeek(top + doctHdr.DrawNodeOffset);
+    DrawNode drawNode[doctHdr.DrawNodeLen / 48];
 
-    FSeek(top + doctHdr.entry2Offset);
-    doctEntry2 doctTable2[doctHdr.entry2Len / 28];
+    FSeek(top + doctHdr.DrawModelInfoOffset);
+    DrawModelInfo drawModelInfo[doctHdr.DrawModelInfoLen / 28];
+	
+	FSeek(top + doctHdr.LocateInfoOffset);
+    LocateInfo locateInfo[doctHdr.LocateInfoLen / 52];
 }
