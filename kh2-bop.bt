@@ -1,0 +1,37 @@
+// Used by kh2-bar.bt
+
+struct BgObjPosHeader {
+    int32 offset;
+    int32 size;
+};
+
+struct BgObjPos {
+    float m_pos[3];
+    float m_rot[3];
+    float m_scale[3];
+    uint32 m_bobIndex;
+    uint32 m_group;
+    int32 motionIndex;
+    uint32 motionOffset;
+    uint32 flag;
+    float model_h_upper;
+    float model_h_lower;
+    float model_m_upper;
+    float model_m_lower;
+    float model_l_upper;
+    float model_l_lower;
+    float parts_h_upper;
+    float parts_h_lower;
+    float parts_m_upper;
+    float parts_m_lower;
+    float parts_l_upper;
+    float parts_l_lower;
+};
+
+void ReadBop() {
+    local int64 top = FTell();
+    BgObjPosHeader bopHdr;
+
+    FSeek(top + bopHdr.offset);
+    BgObjPos bop[bopHdr.size / 104];
+}

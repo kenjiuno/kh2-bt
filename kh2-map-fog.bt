@@ -1,0 +1,27 @@
+// Used by kh2-bar.bt
+
+struct MapColor {
+    struct COLOR bgColor;
+    struct COLOR onColorTable[16];
+    struct Fog fog;
+};
+
+struct Fog {
+	struct COLOR fogColor;
+	float min;
+	float max;
+	float near;
+	float far;
+};
+
+struct COLOR {
+	ubyte R;
+	ubyte G;
+	ubyte B;
+	ubyte A;
+};
+
+void ReadMapColor() {
+	local int64 top = FTell();
+	MapColor mapColor;
+}
