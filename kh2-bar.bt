@@ -21,6 +21,8 @@ BitfieldDisablePadding();
 #include "kh2-coct.bt"
 #include "kh2-texture.bt"
 #include "kh2-motion.bt"
+#include "kh2-map-fog.bt"
+#include "kh2-bop.bt"
 
 enum <ushort> ENTRYTYPE {
     Dummy = 0,
@@ -117,9 +119,11 @@ void ReadBar() {
             case 6: ReadCoct(); break;
             case 7: ReadModelTexture(); break;
             case 9: ReadMotionHeader(); break;
+            case 14: ReadMapColor(); break;
             case 16: ReadMotionTriggers(); break;
             case 17: ReadSubBar(); break;
             case 18: ReadPax(); break;
+            case 21: ReadBop(); break;
         }
     }
 }
