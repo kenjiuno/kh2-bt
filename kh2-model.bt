@@ -178,22 +178,23 @@ struct vifPacketRenderingGroup (int64 top) {
 
 struct mapHeader (int64 top) {
     SetBackColor(cLtGreen);
-    uint numDmaChainMaps;
-    ushort unk3;
-    ushort numVifPacketRenderingGroup;
+    ushort modelCount;
+    ushort shadowCount;
+    ushort textureCount;
+    ushort octalTreeCount;
     uint offVifPacketRenderingGroup;
     uint offDmaChainIndexRemapTable;
     SetBackColor(cLtBlue);
-    dmaChainMap dmaChainMaps(top)[numDmaChainMaps] <optimize=false>;
+    dmaChainMap dmaChainMaps(top)[modelCount] <optimize=false>;
 
     local int64 cursor = FTell();
     FSeek(top + offVifPacketRenderingGroup);
     SetBackColor(cLtYellow);
-    vifPacketRenderingGroup vif_packet_rendering_group(top)[numVifPacketRenderingGroup] <optimize=false>;
+    vifPacketRenderingGroup vif_packet_rendering_group(top)[octalTreeCount] <optimize=false>;
     FSeek(top + offDmaChainIndexRemapTable);
     SetBackColor(cLtBlue);
     uint next_offset;
-    ushort dmaChainIndexRemapTable[numDmaChainMaps];
+    ushort dmaChainIndexRemapTable[modelCount];
     FSeek(cursor);
 
     SetBackColor(cNone);
