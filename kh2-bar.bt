@@ -23,6 +23,7 @@ BitfieldDisablePadding();
 #include "kh2-motion.bt"
 #include "kh2-map-fog.bt"
 #include "kh2-bop.bt"
+#include "kh2-event.bt"
 
 enum <ushort> ENTRYTYPE {
     Dummy = 0,
@@ -47,7 +48,7 @@ enum <ushort> ENTRYTYPE {
     MapCollision2 = 19,
     AnimationLimit = 20,
     BobDescriptor = 21,
-    AnimationLoader = 22,
+    Event = 22,
     ModelCollision = 23,
     Imgd = 24,
     Seqd = 25,
@@ -124,6 +125,7 @@ void ReadBar() {
             case 17: ReadSubBar(); break;
             case 18: ReadPax(); break;
             case 21: ReadBop(); break;
+            case 22: ReadEvent(); break;
         }
     }
 }

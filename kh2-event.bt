@@ -1,0 +1,914 @@
+// Used by kh2-bar.bt
+
+struct BIN_HEAD {
+    short my_size;
+    short id;
+    int mem_size;
+    ubyte ver;
+    ubyte obj_camera_type;
+    char name[ my_size - 10];
+};
+
+struct system_prestart {
+    short my_size;
+    short id;
+};
+
+struct BIN_SYSTEM_START {
+    short my_size;
+    short id;
+    short fade_frame;
+    short dummy;
+};
+
+struct BIN_EVENT_END_FRAME {
+    short my_size;
+    short id;
+    short event_end_frame;
+    short dummy;
+};
+
+struct BIN_SEQ_TREASURE {
+    short my_size;
+    short id;
+    short start_frame;
+    ushort number;
+};
+
+struct BIN_READ_CTRL_CHARA_TBL {
+    short id;
+    short my_size;
+    short entry_id;
+    short put_id;
+    char name[ my_size - 8 ];
+};
+
+struct BIN_READ_CTRL_MOTION_TBL {
+    short id;
+    short my_size;
+    short entry_id;
+    short put_id;
+    short deleteFlag;
+    char motion_name[ my_size - 10 ];
+};
+
+struct BIN_READ_CTRL_AUDIO_TBL {
+    short id;
+    short my_size;
+    char voicenumber[ my_size - 4 ];
+};
+
+struct BIN_READ_CTRL_EFFECT_TBL {
+    short id;
+    short my_size;
+    short put_id;
+    char name[ my_size - 6 ];
+};
+
+struct BIN_READ_CTRL {
+    short my_size;
+    short id;
+    short cnt;
+    short start_frame;
+    short end_frame;
+    short dummy;
+};
+
+struct BIN_AUDIO_FILE {
+    int read_buff;
+    short start_frame;
+    ubyte flag;
+    ubyte name[24];
+    ubyte _padding;
+};
+
+struct BIN_AUDIO {
+    short my_size;
+    short id;
+    short cnt;
+    short dummy;
+    struct BIN_AUDIO_FILE file[cnt];
+};
+
+typedef enum SPLINE_TYPE {
+    SPLINE_LINEAR=0,
+    SPLINE_BEZIER=1,
+    SPLINE_BSPLINE=2,
+    SPLINE_CARDINAL=3,
+} SPLINE_TYPE;
+
+struct BIN_CAMERA_DATA_ENC_WK {
+	int time:29;
+    SPLINE_TYPE type:3;
+    float value;
+    float left;
+    float right;
+};
+
+struct BIN_CAMERA_DATA_ENC {
+    short my_size;
+    short id;
+    short put_id;
+    short cmetx_ofs;
+    short cmetx_cnt;
+    short cmety_ofs;
+    short cmety_cnt;
+    short cmetz_ofs;
+    short cmetz_cnt;
+    short cmietx_ofs;
+    short cmietx_cnt;
+    short cmiety_ofs;
+    short cmiety_cnt;
+    short cmietz_ofs;
+    short cmietz_cnt;
+    short cmroll_ofs;
+    short cmroll_cnt;
+    short cmfov_ofs;
+    short cmfov_cnt;
+    short dummy;
+    struct BIN_CAMERA_DATA_ENC_WK tmp[cmetx_cnt + cmety_cnt + cmetz_cnt + cmietx_cnt + cmiety_cnt + cmietz_cnt + cmroll_cnt + cmfov_cnt];
+};
+
+struct BIN_CAMERA_SEQ {
+    short my_size;
+    short id;
+    short put_id;
+    short start_frame;
+    short end_frame;
+    short cam_id;
+};
+
+struct BIN_COUNTDOWN {
+    unsigned short my_size;
+    short id;
+    short start_frame;
+};
+
+struct BIN_BG {
+    short my_size;
+    short id;
+    short area;
+    char world[ my_size - 6 ];
+};
+
+struct BIN_SE_DATA {
+    short my_size;
+    short id;
+    short put_id;
+    short seb_number;
+    short wave_number;
+};
+
+struct BIN_CHARA {
+    short my_size;
+    short id;
+    short entry_id;
+    short put_id;
+    char name[ my_size - 8 ];
+};
+
+struct BIN_SEQ_BLEND_MOTION {
+    short my_size;
+    short id;
+    ushort start_frame;
+    ushort end_frame;
+    ushort motion_start_frame;
+    short loop_start;
+    short loop_end;
+    short put_id;
+    short blend_frame;
+    char name[ my_size - 18 ];
+};
+
+struct BIN_SE_SEQ {
+    short my_size;
+    short id;
+    short put_id;
+    short type;
+    int se_number;
+    short start_frame;
+    ubyte _padding[2];
+};
+
+struct BIN_SEQ_TEXANIM {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    short no;
+    ubyte flag;
+    ubyte dummy;
+};
+
+struct BIN_SEQ_POS_MOVE {
+    short my_size;
+    short id;
+    short put_id;
+    short start_frame;
+    float start_x;
+    float start_y;
+    float start_z;
+    float end_x;
+    float end_y;
+    float end_z;
+    float x_roll;
+    float y_roll;
+    float z_roll;
+    short frame;
+    ushort unk;
+};
+
+struct BIN_SEQ_POSI {
+    short my_size;
+    short id;
+    short sub_id;
+    short unk;
+    float x;
+    float y;
+    float z;
+    float x_roll;
+    float y_roll;
+    float z_roll;
+    float scale;
+    short put_id;
+    short start_frame;
+};
+
+struct BIN_SEQ_SYSTEM_GAME_SPEED {
+    short my_size;
+    short id;
+    short start_frame;
+    short game_speed_frame;
+    float game_speed;
+};
+
+struct BIN_SEQ_MOVIE {
+    short my_size;
+    short id;
+    short start_frame;
+    char name[ my_size - 6];
+};
+
+struct BIN_CAMERA_DATA {
+    short my_size;
+    short id;
+    short put_id;
+    short unk;
+};
+
+struct BIN_EFFECT_DATA {
+    short my_size;
+    short id;
+    short put_id;
+    char name[ my_size - 6 ];
+};
+
+struct Position {
+    float x;
+    float y;
+    float z;
+};
+
+struct Right {
+    float x;
+    float y;
+    float z;
+};
+
+struct Left {
+    float x;
+    float y;
+    float z;
+};
+
+struct SPLINE_POINT {
+    Position position;
+    Right right;
+    Left left;
+    float lng;
+};
+
+struct BIN_SPLINE_POINT {
+    short my_size;
+    short id;
+    short put_id;
+    short cnt;
+    short type;
+    short dummy;
+    float spline_lng;
+    struct SPLINE_POINT point[cnt];
+};
+
+struct BIN_SPLINE_DATA_ENC {
+    short my_size;
+    short id;
+    short put_id;
+    short trans_ofs;
+    short trans_cnt;
+    short dummy;
+    struct BIN_CAMERA_DATA_ENC_WK tmp[trans_cnt];
+};
+
+struct BIN_EVENT_JUMP {
+    short my_size;
+    short id;
+    short start_frame;
+    short type;
+    short set_no;
+    short area;
+    short entrance;
+    char world[ my_size - 14];
+};
+
+struct BIN_SEQ_BGM {
+    short my_size;
+    short id;
+    short start_frame;
+    short volume_continue;
+    ubyte start_volume;
+    ubyte end_volume;
+    ubyte fade_frame;
+    ubyte bank;
+};
+
+struct BIN_BGM_DATA {
+    short my_size;
+    short id;
+    short put_id;
+    short bgm_number;
+};
+
+struct LightParamPosition {
+    float pos[9];
+    float color[12];
+};
+
+struct BIN_LIGHT_DATA {
+    short put_id;
+    short start_frame;
+    short end_frame;
+    ubyte cam_num;
+    ubyte sub_num;
+    struct LightParamPosition light_param_pos;
+};
+
+struct BIN_LIGHT {
+    unsigned short my_size;
+    short id;
+    short cnt;
+    short work_num;
+    struct BIN_LIGHT_DATA lightData[cnt];
+};
+
+struct BIN_SEQ_CAMERA_COLLISION {
+    short my_size;
+    short id;
+    short start_frame;
+    short type;
+};
+
+struct BIN_MUSICAL_HEADER {
+    short my_size;
+    short id;
+    short rhythm;
+    short clearScore;
+};
+
+struct BIN_BGCOL_SEQ {
+    short my_size;
+    short id;
+    short start_frame;
+    short end_frame;
+    short put_id;
+    short flag;
+};
+
+struct BIN_EFFECT_SEQ {
+    short my_size;
+    short id;
+    short start_frame;
+    short loop;
+    short put_id;
+    short pax_no;
+    short no;
+    short end_type;
+    short fade_frame;
+};
+
+struct BIN_ATTACH_SEQ {
+    short my_size;
+    short id;
+    short start_frame;
+    short end_frame;
+    short my_put_id;
+    short attach_put_id;
+    short bone_no;
+    short pax_no;
+    short type;
+};
+
+struct BIN_KAGE_SEQ {
+    short my_size;
+    short id;
+    short start_frame;
+    short end_frame;
+    short put_id;
+    short flag;
+};
+
+struct BIN_SEQ_MES {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    short mes_no;
+    short type;
+};
+
+struct BIN_BG_GRUPE {
+    short my_size;
+    short id;
+    short start_frame;
+    ubyte no;
+    ubyte flag;
+};
+
+struct BIN_SEQ_BLUR {
+    short my_size;
+    short id;
+    short start_frame;
+    ubyte sw;
+    ubyte alpha;
+    float rot;
+    short x;
+    short y;
+    short rot_frame;
+    ubyte _padding[2];
+};
+
+struct BIN_SEQ_FOCUS {
+    short my_size;
+    short id;
+    short start_frame;
+    ubyte sw;
+    ubyte type;
+    int z;
+};
+
+struct BIN_PART_SEQ {
+    short my_size;
+    short id;
+    short start_frame;
+    short end_frame;
+    short put_id;
+    short part[33];
+};
+
+struct BIN_ALPHA_SEQ {
+    short my_size;
+    short id;
+    short start_frame;
+    short end_frame;
+    ubyte start_alpha;
+    ubyte end_alpha;
+    short time;
+    short put_id;
+};
+
+struct BIN_SEQ_FADE {
+    short my_size;
+    short id;
+    short start_frame;
+    short fade_frame;
+    short fade_type;
+};
+
+struct BIN_TEX_FADE {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    float from;
+    float to;
+    float frame;
+};
+
+struct BIN_SEQ_MEM {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+};
+
+struct BIN_SEQ_CROSSFADE {
+    short my_size;
+    short id;
+    short start_frame;
+    short fade_frame;
+};
+
+struct BIN_IK_SEQ {
+    short my_size;
+    short id;
+    short start_frame;
+    short end_frame;
+    short put_id;
+    short flag;
+};
+
+struct BIN_SPLINE_SEQ {
+    short my_size;
+    short id;
+    short put_id;
+    short start_frame;
+    short end_frame;
+    short cam_ofs;
+};
+
+struct BIN_SEQ_WAIT_MESSAGE {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    short mes_no;
+    short type;
+    short win_type;
+};
+
+struct BIN_WIDE_MASK {
+    short my_size;
+    short id;
+    short start_frame;
+    short flag;
+};
+
+struct BIN_SHAKE {
+    short my_size;
+    short id;
+    short start_frame;
+    short width;
+    short height;
+    short depth;
+    short frame;
+    short type;
+};
+
+struct BIN_SCALE {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    float start;
+    float end;
+    short frame;
+    short type;
+};
+
+struct BIN_TURN {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    short type;
+    short frame;
+    float end;
+};
+
+struct BIN_SEND_BGM {
+    short my_size;
+    short id;
+    short start_frame;
+    short bgm_bank;
+    short bgm_number;
+};
+
+struct BIN_SEQ_OBJCAMERA {
+    short my_size;
+    short id;
+    short start_frame;
+    short type;
+};
+
+struct BIN_MUSICAL_TARGET {
+    short my_size;
+    short id;
+    short appearFrame;
+    short button;
+    short countDownNumber;
+    short countDownStartFrame;
+    short possible;
+    short point;
+    short okSceneFrame;
+    short put_id;
+    short bone;
+    short dummy;
+};
+
+struct BIN_MUSICAL_SCENE {
+    short my_size;
+    short id;
+    short frame;
+    short ngSceneFrame;
+};
+
+struct BIN_VIB_DATA {
+    short my_size;
+    short id;
+    short start_frame;
+    short dummy;
+    ubyte data[2];
+};
+
+struct BIN_LOOKAT {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    float rl;
+    float ud;
+    short frame;
+    short type;
+};
+
+struct BIN_SHADOW_ALPHA {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    ubyte start_alpha;
+    ubyte end_alpha;
+    short frame;
+};
+
+struct BIN_MIRROR {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    short x;
+    short y;
+    short z;
+};
+
+struct BIN_SEQ_MISSION_EFFECT {
+    short my_size;
+    short id;
+    short start_frame;
+    short number;
+    short end_type;
+};
+
+struct BIN_SEQ_LAYOUT {
+    short my_size;
+    short id;
+    short start_frame;
+    short number;
+    char name[ my_size - 8 ];
+};
+
+struct BIN_EFFECT_DELETE {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+};
+
+struct BIN_CACHE_CLEAR {
+    short my_size;
+    short id;
+    short start_frame;
+    char put_id[96];
+};
+
+struct BIN_SEQ_OBJ_PAUSE {
+    short my_size;
+    short id;
+    short start_frame;
+    ubyte sw;
+    ubyte dummy;
+};
+
+struct BIN_SEQ_BGSE {
+    short my_size;
+    short id;
+    short start_frame;
+    ubyte sw;
+    ubyte dummy;
+};
+
+struct BIN_SEQ_GLOW {
+    short my_size;
+    short id;
+    short start_frame;
+    ubyte sw;
+    ubyte dummy;
+};
+
+struct BIN_SEQ_SAVE_POINT {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+};
+
+struct BIN_BLACK_FOG {
+    short my_size;
+    short id;
+    short start_frame;
+    short frame;
+    float start;
+    float end;
+};
+
+struct BIN_FOG {
+    short my_size;
+    short id;
+    short start_frame;
+    ubyte min;
+    ubyte max;
+    int fog_near;
+    ubyte r;
+    ubyte g;
+    ubyte b;
+    ubyte unk;
+};
+
+struct BIN_PLAYER_OFFSET_CAMERA {
+    short my_size;
+    short id;
+    short start_frame;
+    short type;
+};
+
+struct BIN_SKY_OFF {
+    short my_size;
+    short id;
+    short start_frame;
+    short type;
+};
+
+struct BIN_HIDE_FOBJ {
+    short my_size;
+    short id;
+    short start_frame;
+    short type;
+};
+
+struct BIN_SEQ_MOB {
+    short my_size;
+    short id;
+    short start_frame;
+    short put_id;
+    float x;
+    float y;
+    float z;
+    int num;
+    float range_x;
+    float range_y;
+    float range_z;
+    float rot_y;
+};
+
+struct BIN_TAG {
+    short my_size;
+    short id;
+    short start_frame;
+    short unk;
+    int tagNumber;
+};
+
+struct BIN_WALL_CLIP {
+    short my_size;
+    short id;
+    short start_frame;
+    short flag;
+};
+
+struct BIN_VOICE_ALL_FADEOUT {
+    short my_size;
+    short id;
+    short start_frame;
+    short fade_frame;
+};
+
+local short my_size = 1;
+local short id;
+
+void ReadCTRL() {
+    BIN_READ_CTRL readCtrl;
+    local int i;
+    for (i=0; i<readCtrl.cnt; i++) {
+            id = ReadShort();
+            switch (id) {
+            case 37: BIN_READ_CTRL_MOTION_TBL motionCtrl; break;
+            case 38: BIN_READ_CTRL_AUDIO_TBL audioCtrl; break;
+            case 56: BIN_READ_CTRL_CHARA_TBL charaCtrl; break;
+            case 57: BIN_READ_CTRL_EFFECT_TBL effectCtrl; break;
+            }
+    }
+}
+
+void ReadEvent() {
+    local int64 top = FTell();
+    local int64 cursor;
+    while( my_size != 0)
+    {
+            cursor = FTell();
+            my_size = ReadShort();
+            FSkip(2);
+            if (my_size != 0) {
+            id = ReadShort();
+            FSeek(cursor);
+            switch (id) {
+            case 0: BIN_HEAD Hdr; break;
+            case 1: BIN_CHARA chara; break;
+            case 2: BIN_SEQ_POSI posI; break;
+            case 3: BIN_BG bg; break;
+            //Couldn't find 4
+            case 5: BIN_CAMERA_DATA cameraData; break;
+            case 6: BIN_CAMERA_SEQ cameraSeq; break;
+            case 7: BIN_EFFECT_DATA effectData; break;
+            case 8: BIN_EVENT_END_FRAME end; break;
+            case 9: BIN_EFFECT_SEQ effectSeq; break;
+            case 10: BIN_ATTACH_SEQ attachSeq; break;
+            case 11: BIN_KAGE_SEQ kageSeq; break;
+            case 12: BIN_BGCOL_SEQ bgcolSeq; break;
+            case 13: BIN_PART_SEQ partSeq; break;
+            case 14: BIN_ALPHA_SEQ alphaSeq; break;
+            case 15: system_prestart prestart; break;
+            case 16: BIN_SYSTEM_START start; break;
+            case 17: BIN_EVENT_JUMP eventJump; break;
+            case 18: BIN_SEQ_FADE seqFade; break;
+            case 19: BIN_CAMERA_DATA_ENC cameraDataEnc; break;
+            //Couldn't find 20
+            case 21: BIN_SEQ_MES seqMes; break;
+            case 22: BIN_BG_GRUPE bgGroup; break;
+            case 23: BIN_SEQ_BLUR seqBlur; break;
+            case 24: BIN_SEQ_FOCUS seqFocus; break;
+            case 25: BIN_SEQ_TEXANIM seqTexanim; break;
+            case 26: BIN_SEQ_MEM seqMem; break;
+            case 27: BIN_SEQ_CROSSFADE crossfade; break;
+            case 28: BIN_IK_SEQ ikSeq; break;
+            case 29: BIN_SPLINE_DATA_ENC splineDataEnc; break;
+            case 30: BIN_SPLINE_POINT splinePoint; break;
+            case 31: BIN_SPLINE_SEQ splineSeq; break;
+            case 32: BIN_SEQ_SYSTEM_GAME_SPEED gameSpeed; break;
+            case 33: BIN_TEX_FADE texFade; break;
+            case 34: BIN_WIDE_MASK wideMask; break;
+            case 35: BIN_AUDIO audio; break;
+            case 36: ReadCTRL(); break;
+            case 37: BIN_READ_CTRL_MOTION_TBL motionCtrl; break;
+            case 38: BIN_READ_CTRL_AUDIO_TBL audioCtrl; break;
+            case 39: BIN_SHAKE shake; break;
+            case 40: BIN_SCALE scale; break;
+            case 41: BIN_TURN turn; break;
+            case 42: BIN_SE_DATA seData; break;
+            case 43: BIN_SE_SEQ seSeq; break;
+            case 44: BIN_SEQ_BLEND_MOTION blendMotion; break;
+            case 45: BIN_SEQ_WAIT_MESSAGE waitMessage; break;
+            case 46: BIN_SEQ_BGM seqBgm; break;
+            case 47: BIN_BGM_DATA bgmData; break;
+            case 48: BIN_SEND_BGM sendBgm; break;
+            case 49: BIN_SEQ_OBJCAMERA objCamera; break;
+            case 50: BIN_MUSICAL_HEADER musicalHeader; break;
+            case 51: BIN_MUSICAL_TARGET musicalTarget; break;
+            case 52: BIN_MUSICAL_SCENE musicalScene; break;
+            case 53: BIN_VIB_DATA vibData; break;
+            case 54: BIN_LOOKAT lookat; break;
+            case 55: BIN_SHADOW_ALPHA shadowAlpha; break;
+            case 56: BIN_READ_CTRL_CHARA_TBL charaCtrl; break;
+            case 57: BIN_READ_CTRL_EFFECT_TBL effectCtrl; break;
+            case 58: BIN_MIRROR mirror; break;
+            case 59: BIN_SEQ_TREASURE treasure; break;
+            case 60: BIN_SEQ_MISSION_EFFECT missionEffect; break;
+            case 61: BIN_SEQ_LAYOUT seqLayout; break;
+            //Couldn't find 62
+            case 63: BIN_EFFECT_DELETE effectDelete; break;
+            case 64: BIN_CACHE_CLEAR cacheClear; break;
+            case 65: BIN_SEQ_OBJ_PAUSE objPause; break;
+            case 66: BIN_SEQ_BGSE bgse; break;
+            case 67: BIN_SEQ_GLOW glow; break;
+            case 68: BIN_SEQ_MOVIE movie; break;
+            case 69: BIN_SEQ_SAVE_POINT savePoint; break;
+            case 70: BIN_SEQ_CAMERA_COLLISION cameraCollision; break;
+            case 71: BIN_SEQ_POS_MOVE posMove; break;
+            case 72: BIN_BLACK_FOG blackFog; break;
+            case 73: BIN_FOG fog; break;
+            case 74: BIN_PLAYER_OFFSET_CAMERA playerOffsetCamera; break;
+            case 75: BIN_SKY_OFF skyOff; break;
+            //Couldn't find 76
+            case 77: BIN_HIDE_FOBJ hideFobj; break;
+            case 78: BIN_LIGHT light; break;
+            case 79: BIN_SEQ_MOB seqMob; break;
+            case 80: BIN_COUNTDOWN count; break;
+            case 81: BIN_TAG tag; break;
+            case 82: BIN_WALL_CLIP wallClip; break;
+            case 83: BIN_VOICE_ALL_FADEOUT voiceAllFadeout; break;
+            default :FSkip(my_size);
+            }
+            }
+            else {
+            FSkip(my_size);
+            }
+    } 
+}
