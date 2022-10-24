@@ -1,0 +1,7 @@
+// Use against exposed motion data
+
+#define DONT_PARSE 1
+
+#include "kh2-bar.bt"
+
+ReadEvent();

@@ -85,9 +85,9 @@ struct BIN_AUDIO_FILE {
 struct BIN_AUDIO {
     short my_size;
     short id;
-    short cnt;
+    short cnt_audio_file;
     short dummy;
-    struct BIN_AUDIO_FILE file[cnt];
+    struct BIN_AUDIO_FILE file[cnt_audio_file];
 };
 
 typedef enum SPLINE_TYPE {
@@ -126,7 +126,7 @@ struct BIN_CAMERA_DATA_ENC {
     short cmfov_ofs;
     short cmfov_cnt;
     short dummy;
-    struct BIN_CAMERA_DATA_ENC_WK tmp[cmetx_cnt + cmety_cnt + cmetz_cnt + cmietx_cnt + cmiety_cnt + cmietz_cnt + cmroll_cnt + cmfov_cnt];
+    struct BIN_CAMERA_DATA_ENC_WK tmp[cmetx_cnt + cmety_cnt + cmetz_cnt + cmietx_cnt + cmiety_cnt + cmietz_cnt + cmroll_cnt + cmfov_cnt] <optimize=false>;
 };
 
 struct BIN_CAMERA_SEQ {
@@ -292,11 +292,11 @@ struct BIN_SPLINE_POINT {
     short my_size;
     short id;
     short put_id;
-    short cnt;
+    short point_cnt;
     short type;
     short dummy;
     float spline_lng;
-    struct SPLINE_POINT point[cnt];
+    struct SPLINE_POINT point[point_cnt] <optimize=false>;
 };
 
 struct BIN_SPLINE_DATA_ENC {
@@ -306,7 +306,7 @@ struct BIN_SPLINE_DATA_ENC {
     short trans_ofs;
     short trans_cnt;
     short dummy;
-    struct BIN_CAMERA_DATA_ENC_WK tmp[trans_cnt];
+    struct BIN_CAMERA_DATA_ENC_WK tmp[trans_cnt] <optimize=false>;
 };
 
 struct BIN_EVENT_JUMP {
@@ -355,9 +355,9 @@ struct BIN_LIGHT_DATA {
 struct BIN_LIGHT {
     unsigned short my_size;
     short id;
-    short cnt;
+    short light_cnt;
     short work_num;
-    struct BIN_LIGHT_DATA lightData[cnt];
+    struct BIN_LIGHT_DATA lightData[light_cnt];
 };
 
 struct BIN_SEQ_CAMERA_COLLISION {
@@ -461,7 +461,7 @@ struct BIN_PART_SEQ {
     short start_frame;
     short end_frame;
     short put_id;
-    short part[33];
+    short part[ (my_size - 10) / 2 ];
 };
 
 struct BIN_ALPHA_SEQ {
@@ -616,7 +616,7 @@ struct BIN_VIB_DATA {
     short id;
     short start_frame;
     short dummy;
-    ubyte data[2];
+    ubyte data[ my_size - 8 ];
 };
 
 struct BIN_LOOKAT {
@@ -855,7 +855,7 @@ void ReadEvent() {
             case 32: BIN_SEQ_SYSTEM_GAME_SPEED gameSpeed; break;
             case 33: BIN_TEX_FADE texFade; break;
             case 34: BIN_WIDE_MASK wideMask; break;
-            case 35: BIN_AUDIO audio; break;
+            case 35: BIN_AUDIO audio <optimize=false>; break;
             case 36: ReadCTRL(); break;
             case 37: BIN_READ_CTRL_MOTION_TBL motionCtrl; break;
             case 38: BIN_READ_CTRL_AUDIO_TBL audioCtrl; break;
