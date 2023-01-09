@@ -1,0 +1,41 @@
+// Used by kh2-bar.bt
+
+typedef struct {
+    SetBackColor(cLtBlue);
+    uint unk;
+    uint textId;
+    SetBackColor(cNone);
+} TalkMessageContent;
+
+typedef struct(local int64 top) {
+    ushort id;
+    ushort unk;
+    uint pointer;
+} TalkMessageDef;
+
+typedef struct(local int64 top) {
+    int fileType;
+    int entryCount;
+    
+    local int x;
+    SetBackColor(cLtGreen);
+    for (x=0; x<entryCount; x++) {
+        TalkMessageDef tmDef(top);
+    }
+    SetBackColor(cNone);
+    
+    for (x=0; x<entryCount; x++) {
+        FSeek(top + tmDef[x].pointer);
+        TalkMessageContent tmContent <optimize=false>;
+    }
+} MessageHeader;
+
+void ReadMessage() {
+    local int64 top = FTell();
+    int fileType;
+
+    FSeek(top);
+    if (fileType == 3) {
+        MessageHeader mHdr(top);
+    }
+}

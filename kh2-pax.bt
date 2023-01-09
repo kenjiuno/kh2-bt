@@ -483,7 +483,7 @@ struct EffectsTab5 {
 
 void ReadDpd() {
     local int64 top = FTell();
-    DpdHeader dpdHeader;
+    DpdHeader dpdHeader <bgcolor=cLtBlue>;
 
     local int i;
     local int g;
@@ -530,8 +530,8 @@ struct DpxEntry {
 void ReadDpx() {
     local int64 top = FTell();
 
-    DpxHeader dpxHeader;
-    DpxEntry dpxEnts[dpxHeader.dpxEntries];
+    DpxHeader dpxHeader <bgcolor=cLtBlue>;
+    DpxEntry dpxEnts[dpxHeader.dpxEntries] <bgcolor=cBlue>;
     local int i;
     for (i=0; i<dpxHeader.dpxEntries; i++) {
         FSeek(top + dpxEnts[i].DpdOffset);
@@ -575,7 +575,7 @@ void ReadPax() {
     local int64 top = FTell();
 
     PaxHeader paxHeader;
-    PaxEntry paxEnts[paxHeader.entriesCount];
+    PaxEntry paxEnts[paxHeader.entriesCount] <bgcolor=cBlue>;
     FSeek(top + paxHeader.offsetName);
     char Name[128];
     FSeek(top + paxHeader.offsetDpx);

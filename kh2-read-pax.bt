@@ -1,0 +1,7 @@
+// Use against pax file
+
+#define DONT_PARSE 1
+
+#include "kh2-bar.bt"
+
+ReadPax();

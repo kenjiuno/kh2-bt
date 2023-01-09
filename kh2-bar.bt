@@ -24,6 +24,7 @@ BitfieldDisablePadding();
 #include "kh2-map-fog.bt"
 #include "kh2-bop.bt"
 #include "kh2-event.bt"
+#include "kh2-message.bt"
 
 enum <ushort> ENTRYTYPE {
     Dummy = 0,
@@ -115,6 +116,7 @@ void ReadBar() {
     for (i=0; i<barHdr.num_files; i++) {
         FSeek(top + barHdr.entries[i].offset);
         switch (barHdr.entries[i].type) {
+            case 2: ReadMessage(); break;
             case 4: ReadModel(); break;
             case 5: ReadDoct(); break;
             case 6: ReadCoct(); break;
